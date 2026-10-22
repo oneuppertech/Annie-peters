@@ -2,7 +2,7 @@
 import { RouterView } from 'vue-router'
 import AppHeader from '@/components/AppHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
-import WhatsAppButton from '@/components/WhatsAppButton.vue'
+import WhatsAppButton from '@/components/WhatsappButton.vue'
 </script>
 
 <template>
