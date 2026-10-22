@@ -43,71 +43,117 @@ const links = [
   { label: 'Contact', href: '#contact' }
 ]
 
+/* ---------- NEW: two-column collections with write-ups ---------- */
 const collections = [
   {
-    name: "Annie's Ready-to-Wear",
-    tag: 'A-RTW',
-    line: 'Everyday style, thoughtfully designed.',
-    img: rtwImage,
-    slug: 'ready-to-wear',
-    span: 'md:col-span-2 md:row-span-2'
+    id: 'c-rtw', slug: 'ready-to-wear', img: rtwImage,
+    name: 'Annie’s Ready-to-Wear (A-RTW)', line: 'Everyday style, thoughtfully designed.',
+    paras: [
+      'Annie’s Ready-to-Wear collection brings contemporary fashion into everyday life. It is intended for women who appreciate clothing that feels considered, expressive and suitable for a range of settings. Depending on the design, pieces may be styled for daytime activities, social gatherings, work-related occasions or relaxed events.',
+      'The collection focuses on the relationship between comfort, appearance and individual style. Customers should review each product listing for confirmed fabric details, available sizes, colour options, care instructions and current availability.'
+    ],
+    cta: 'Explore Ready-to-Wear'
   },
   {
-    name: 'Contemporary African Suits',
-    tag: 'Tailoring',
-    line: 'African heritage meets modern tailoring.',
-    img: contemporaryImage,
-    slug: 'african-suits',
-    span: ''
+    id: 'c-suits', slug: 'african-suits', img: contemporaryImage,
+    name: 'Contemporary African Suits', line: 'African heritage meets modern tailoring.',
+    paras: [
+      'The Contemporary African Suits collection explores African-inspired textiles and design details through modern tailoring. The collection is intended for customers who want a polished outfit with character, whether for professional engagements, celebrations, formal gatherings or other occasions where presentation matters.',
+      'Each product listing should explain the garment’s cut, fabric, fastening, fit, available sizes and any styling details relevant to the design. Where a customer requires adjustments, the team can review whether customisation is available for the selected garment.'
+    ],
+    cta: 'Explore Contemporary African Suits'
   },
   {
-    name: 'Focus on the Bride',
-    tag: 'Bridal',
-    line: 'Designed for one of life’s meaningful moments.',
-    img: bridalImage,
-    slug: 'bridal',
-    span: ''
+    id: 'c-bride', slug: 'bridal', img: bridalImage,
+    name: 'Focus on the Bride', line: 'Designed for one of life’s meaningful moments.',
+    paras: [
+      'Focus on the Bride celebrates the personality and preferences of each bride. Bridal style is personal, and the right outfit should reflect the wearer’s vision for the day. This collection explores bridal designs influenced by African fashion, distinctive details and silhouettes suited to different tastes.',
+      'Customers planning a bridal outfit should contact AnniePetars early to discuss the design concept, event date, measurements, fabric preferences, fitting requirements and production schedule. A request is not confirmed until the design, price and timeline have been agreed in writing.'
+    ],
+    cta: 'Discuss a Bridal Design', href: '#custom'
   },
   {
-    name: 'Aso Ebi Special',
-    tag: 'Celebrations',
-    line: 'Together in style, united by tradition.',
-    img: asoEbiImage,
-    slug: 'aso-ebi',
-    span: ''
+    id: 'c-aso', slug: 'aso-ebi', img: asoEbiImage,
+    name: 'Aso Ebi Special', line: 'Together in style, united by tradition.',
+    paras: [
+      'Aso Ebi is associated with family, friendship, community and shared celebration. The Aso Ebi Special collection brings a contemporary design perspective to coordinated dressing for weddings, birthdays, anniversaries and other memorable gatherings.',
+      'For group enquiries, please provide the event date, number of outfits, preferred fabric or colour direction, approximate size range and delivery location. Availability, minimum quantities, fabric sourcing, pricing and production timing should be confirmed directly with the team before a group order is finalised.'
+    ],
+    cta: 'Enquire About Aso Ebi', href: '#contact'
   },
   {
-    name: 'Made-to-Measure',
-    tag: 'Custom',
-    line: 'Your measurements. Your preferences.',
-    img: madeToMeasureImage,
-    slug: 'made-to-measure',
-    span: ''
+    id: 'c-mtm', slug: 'made-to-measure', img: madeToMeasureImage,
+    name: 'Made-to-Measure Designs', line: 'Your measurements. Your preferences. Your design.',
+    paras: [
+      'The Made-to-Measure service offers customers the opportunity to discuss a garment shaped around their measurements and personal preferences. The process begins with understanding the outfit, occasion, desired fit, design details and expected delivery date.',
+      'Customers may submit measurements and reference images through the measurement request form. AnniePetars will review the submission and contact the customer if additional details or clarification are needed. The team will confirm feasibility, fabric availability, quotation, payment terms and estimated production time before accepting the order.'
+    ],
+    cta: 'Submit Your Measurements', href: '#custom'
   },
   {
-    name: 'Stand Official 001',
-    tag: 'Formal',
-    line: 'A distinctive expression of presence and purpose.',
-    img: standImage,
-    slug: 'stand-official-001',
-    span: ''
+    id: 'c-stand', slug: 'stand-official-001', img: standImage,
+    name: 'Stand Official 001', line: 'A distinctive expression of presence and purpose.',
+    paras: [
+      'Stand Official 001 explores polished dressing for formal engagements, professional occasions and events where presentation matters. The collection is for people who value a considered appearance while retaining a sense of personal identity.',
+      'Product information should describe the cut, intended use, fit, fabric, available sizes and styling details for each garment. Any tailoring or customisation options should be stated clearly.'
+    ],
+    cta: 'Explore Stand Official 001'
   },
   {
-    name: 'The Girl Child Love',
-    tag: 'Girls',
-    line: 'Celebrating young girls through fashion and creativity.',
-    img: girlChildImage,
-    slug: 'girl-child',
-    span: ''
+    id: 'c-girl', slug: 'girl-child', img: girlChildImage,
+    name: 'The Girl Child Love', line: 'Celebrating young girls through fashion, care and creativity.',
+    paras: [
+      'The Girl Child Love collection recognises the individuality, confidence and potential of young girls. It focuses on age-appropriate clothing and thoughtful styling that allows young wearers to feel comfortable and express their personality.',
+      'The collection also reflects the brand’s interest in positive representation and the importance of recognising young girls as individuals with their own interests, preferences and aspirations. Product pages should clearly state age or size guidance, garment measurements, fabric information and care instructions.'
+    ],
+    cta: 'Explore The Girl Child Love'
   },
   {
-    name: 'New Arrivals',
-    tag: 'New',
-    line: 'Fresh additions. Individual style.',
-    img: newDesignImage,
-    slug: 'new-arrivals',
-    span: 'md:col-span-2'
+    id: 'c-new', slug: 'new-arrivals', img: newDesignImage,
+    name: 'New Designs, New Arrivals', line: 'Fresh additions. Individual style.',
+    paras: [
+      'This section features new designs and recent additions to the AnniePetars range. Each arrival should be accompanied by clear product photography, a description of the design, available sizes and colours, price, fabric composition, care instructions and an estimated dispatch or production timeframe.',
+      'Availability can change. Customers should contact the team if they need confirmation before placing an order.'
+    ],
+    cta: 'View New Arrivals'
   }
+]
+const collectionHref = (c) => c.href || `${SHOP_URL}/collections/${c.slug}`
+
+/* ---------- NEW: press article thumbnail ---------- */
+const article = {
+  url: 'https://pmnewsnigeria.com/2024/02/22/african-fashion-finds-a-modern-voice-through-anniepetars-the-brand-founded-by-asana-peterson/',
+  // Better: download this image into /src/assets and import it instead of hotlinking
+  img: 'https://cdn.pmnewsnigeria.com/wp-content/uploads/2026/10/Annie-Peterson.jpg',
+  source: 'P.M. News',
+  title: 'African fashion finds a modern voice through AnniePetars, the brand founded by Asana Peterson',
+  author: 'Michael Adesina',
+  date: '22nd February, 2024'
+}
+
+/* ---------- NEW: full designer write-up ---------- */
+const designerParas = [
+  'Fashion provides a means of expressing identity, culture and individuality. For Asana Kemuwa, a BSc graduate in Sociology, this perspective shapes the creative vision behind AnniePetars. Inspired by African fashion and its rich cultural heritage, her work explores the relationship between tradition and contemporary style through distinctive prints, carefully considered cuts and expressive silhouettes. Her designs reflect an appreciation for cultural identity while embracing modern aesthetics and the individuality of the people who wear them.',
+  'As the founder and creative designer of AnniePetars, Asana leads a brand shaped by the relationship between heritage and modern dress. She is interested in the ways colour, fabric, pattern and construction influence how a garment is experienced. Her approach recognises that clothing serves different purposes: it can express personal taste, mark a celebration, support professional presentation or help someone feel connected to their cultural identity.',
+  'Over more than five years, AnniePetars has developed its creative identity and reached customers in Nigeria, the United Kingdom, the United States and Ghana. This experience forms part of the brand’s continuing development and its ambition to engage with a wider international fashion community.',
+  'For Asana, contemporary African fashion is not limited to one type of occasion or one interpretation of tradition. African-inspired design can be part of everyday wardrobes, professional dressing, celebrations, bridal styling and personal creative expression. Through AnniePetars, she aims to present designs that respect their inspiration while responding to the preferences of modern customers.',
+  'Her creative direction is guided by individuality, attention to detail and the understanding that a garment is ultimately worn by a person with their own identity and expectations. The brand’s collections therefore explore different forms of expression, from ready-to-wear pieces to occasion wear and selected made-to-measure designs.',
+  'As AnniePetars continues to grow, Asana aims to strengthen the brand’s visibility through new collections, thoughtful collaborations, media opportunities and participation in fashion events. Her long-term vision is to build a recognised brand associated with contemporary African design, original creative expression and international engagement.'
+]
+const visionList = [
+  'Explore African-inspired patterns, fabrics, colours and visual influences with respect for their cultural context.',
+  'Develop distinctive silhouettes and contemporary interpretations of African clothing.',
+  'Create designs that support individual style and personal expression.',
+  'Build relationships with customers, retailers, media professionals and creative partners.',
+  'Expand the brand’s international visibility through collections, collaborations and professional opportunities.',
+  'Present the brand’s work and milestones accurately, with clear supporting information.'
+]
+const designerPhilosophy = [
+  { title: 'Identity is part of the design', text: 'Our starting point is an appreciation for the cultural influences, stories and visual language associated with African fashion. These influences inform the creative process without requiring every garment to follow the same style or occasion.' },
+  { title: 'Heritage and contemporary style can coexist', text: 'We explore ways to interpret African-inspired details through modern cuts, proportions and styling. This allows the brand to engage with contemporary wardrobes while maintaining a visible connection to its creative inspiration.' },
+  { title: 'Personal style deserves room', text: 'Customers have different preferences, body shapes, occasions and expectations. We aim to explain each design clearly and offer selected personalisation options where production requirements allow.' },
+  { title: 'Fit and communication matter', text: 'For made-to-measure requests, clear communication is essential. Customers should provide accurate measurements and design details, while AnniePetars should confirm the agreed specification, price and production schedule before work begins.' },
+  { title: 'Creative growth is collaborative', text: 'Fashion develops through conversations between designers, customers, makers, photographers, stylists, retailers, publications and other creative professionals. We welcome proposals that align with the brand’s direction and values.' }
 ]
 
 const values = [
@@ -185,7 +231,7 @@ const marquee = [
   'Heritage'
 ]
 
-/* ---------- NEW: trust bar, best sellers, lookbook, testimonials, FAQ ---------- */
+/* ---------- trust bar, best sellers, lookbook, testimonials, FAQ ---------- */
 const trust = [
   { icon: 'fa-solid fa-truck-fast', title: 'Worldwide delivery', text: 'Nigeria, UK, USA, Ghana and beyond.' },
   { icon: 'fa-solid fa-ruler-combined', title: 'Made-to-measure', text: 'Fitted to your measurements.' },
@@ -325,51 +371,7 @@ const joinNews = () => {
 
 <template>
   <div class="ap bg-[#FFF7F1] text-[#2A1B16] antialiased overflow-x-hidden">
-    <!-- NAV -->
-    <header
-      class="fixed inset-x-0 top-0 z-50 bg-white transition-all duration-500"
-      :class="scrolled ? 'shadow-[0_8px_30px_-12px_rgba(42,27,22,.18)] py-3' : 'py-5'"
-    >
-      <div class="mx-auto flex max-w-7xl items-center justify-between px-6">
-        <a href="#top" aria-label="AnniePetars home">
-          <img
-            src="../../src/assets/annie-peters-logo.png"
-            alt="AnniePetars"
-            class="w-auto transition-all duration-500"
-            :class="scrolled ? 'h-9' : 'h-11'"
-          />
-        </a>
-        <nav class="hidden items-center gap-9 text-sm lg:flex" aria-label="Primary">
-          <a v-for="l in links" :key="l.href" :href="l.href" class="link-u">{{ l.label }}</a>
-        </nav>
-        <div class="hidden lg:block">
-          <a :href="SHOP_URL" class="btn-peach"
-            >Shop now <i class="fa-solid fa-bag-shopping ml-2 text-xs"></i
-          ></a>
-        </div>
-        <button
-          class="lg:hidden text-xl"
-          :aria-expanded="navOpen"
-          aria-label="Menu"
-          @click="navOpen = !navOpen"
-        >
-          <i :class="navOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'"></i>
-        </button>
-      </div>
-      <Transition name="drop">
-        <nav v-if="navOpen" class="lg:hidden mx-6 mt-4 rounded-3xl bg-white p-6 shadow-xl">
-          <a
-            v-for="l in links"
-            :key="l.href"
-            :href="l.href"
-            class="block py-3 text-lg"
-            @click="navOpen = false"
-            >{{ l.label }}</a
-          >
-          <a :href="SHOP_URL" class="btn-peach mt-3 w-full justify-center">Shop now</a>
-        </nav>
-      </Transition>
-    </header>
+    
 
     <!-- HERO -->
     <section id="top" class="relative min-h-screen pt-32 pb-20">
@@ -439,7 +441,7 @@ const joinNews = () => {
       </div>
     </div>
 
-    <!-- NEW: TRUST BAR -->
+    <!-- TRUST BAR -->
     <section class="mx-auto max-w-7xl px-6 pt-20">
       <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div
@@ -496,479 +498,10 @@ const joinNews = () => {
       </div>
     </section>
 
-    <!-- COLLECTIONS -->
-    <section id="collections" class="bg-[#2A1B16] py-28 text-[#FFF7F1]">
-      <div class="mx-auto max-w-7xl px-6">
-        <div class="mb-14 flex flex-wrap items-end justify-between gap-6" data-aos="fade-up">
-          <h2 class="max-w-2xl font-display text-5xl leading-tight md:text-6xl">
-            Signature designs. Distinctive identity.
-          </h2>
-          <a :href="SHOP_URL" class="btn-peach">Explore all collections</a>
-        </div>
-        <div class="grid auto-rows-[320px] gap-5 md:grid-cols-4">
-          <a
-            v-for="(c, i) in collections"
-            :key="c.slug"
-            :href="`${SHOP_URL}/collections/${c.slug}`"
-            class="tile group relative overflow-hidden rounded-[2rem] bg-[#4A2F26]"
-            :class="c.span"
-            data-aos="zoom-in-up"
-            :data-aos-delay="(i % 4) * 100"
-          >
-            <img
-              :src="c.img"
-              :alt="c.name"
-              loading="lazy"
-              class="absolute inset-0 h-full w-full object-cover transition duration-[1200ms] group-hover:scale-110"
-            />
-            <div
-              class="absolute inset-0 bg-gradient-to-t from-[#2A1B16]/90 via-[#2A1B16]/10 to-transparent"
-            ></div>
-            <span
-              class="absolute left-5 top-5 rounded-full bg-[#FFC4A3] px-3 py-1 text-xs text-[#2A1B16]"
-              >{{ c.tag }}</span
-            >
-            <div class="absolute inset-x-0 bottom-0 p-6">
-              <h3 class="font-display text-2xl md:text-3xl">{{ c.name }}</h3>
-              <p
-                class="mt-1 max-h-0 overflow-hidden text-sm text-[#FFD9C2] opacity-0 transition-all duration-500 group-hover:max-h-16 group-hover:opacity-100"
-              >
-                {{ c.line }}
-              </p>
-            </div>
-            <span
-              class="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-[#2A1B16] opacity-0 transition group-hover:opacity-100"
-            >
-              <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
-            </span>
-          </a>
-        </div>
-      </div>
-    </section>
+    
 
-    <!-- NEW: BEST SELLERS -->
-    <!-- <section class="mx-auto max-w-7xl px-6 py-28">
-      <div class="mb-12 flex flex-wrap items-end justify-between gap-6" data-aos="fade-up">
-        <h2 class="max-w-xl font-display text-5xl leading-tight md:text-6xl">
-          Customer favourites
-        </h2>
-        <a :href="SHOP_URL" class="btn-ghost">View all</a>
-      </div>
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <a
-          v-for="(p, i) in bestSellers"
-          :key="p.slug"
-          :href="`${SHOP_URL}/products/${p.slug}`"
-          class="group"
-          data-aos="fade-up"
-          :data-aos-delay="i * 100"
-        >
-          <div class="aspect-[3/4] overflow-hidden rounded-3xl bg-[#FFD9C2]">
-            <img
-              :src="p.img"
-              :alt="p.name"
-              loading="lazy"
-              class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-            />
-          </div>
-          <h3 class="mt-4 font-display text-xl">{{ p.name }}</h3>
-          <p class="text-sm text-[#C4623A]">{{ p.price }}</p>
-        </a>
-      </div>
-    </section> -->
 
-    <!-- DESIGNER -->
-    <section id="designer" class="mx-auto max-w-7xl px-6 py-28">
-      <div class="grid items-center gap-16 lg:grid-cols-2">
-        <div class="relative" data-aos="fade-right">
-          <div class="aspect-[4/5] overflow-hidden rounded-t-[12rem] rounded-b-3xl bg-[#FFD9C2]">
-            <img
-              src="../assets/founder.png"
-              alt="Asana Kemuwa, founder and creative designer"
-              class="h-full w-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            class="spin-badge absolute -bottom-6 -right-2 flex h-28 w-28 items-center justify-center rounded-full bg-[#F59A6C] text-center text-xs font-medium"
-          >
-            Wear<br />your<br />story
-          </div>
-        </div>
-        <div data-aos="fade-left">
-          <h2 class="font-display text-5xl leading-tight md:text-6xl">Meet Asana Kemuwa</h2>
-          <p class="mt-2 text-[#C4623A]">Founder and Creative Designer</p>
-          <p class="mt-6 leading-relaxed text-[#5A413A]">
-            A BSc graduate in Sociology, Asana sees fashion as a way to express identity, culture
-            and individuality. Her work explores the relationship between tradition and contemporary
-            style through distinctive prints, carefully considered cuts and expressive silhouettes.
-          </p>
-          <p class="mt-4 leading-relaxed text-[#5A413A]">
-            Over more than five years, AnniePetars has reached customers in Nigeria, the United
-            Kingdom, the United States and Ghana, and continues to grow through new collections,
-            collaborations and media opportunities.
-          </p>
-          <ul class="mt-8 space-y-3">
-            <li
-              v-for="p in [
-                'Explore African-inspired patterns with respect for their context',
-                'Develop distinctive, contemporary silhouettes',
-                'Build lasting relationships with customers and creative partners'
-              ]"
-              :key="p"
-              class="flex gap-3"
-            >
-              <i class="fa-solid fa-circle-check mt-1 text-[#E2784A]"></i><span>{{ p }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- NEW: LOOKBOOK -->
-    <!-- <section class="bg-[#FFE6D6] py-28">
-      <div class="mx-auto max-w-7xl px-6">
-        <h2
-          class="mb-12 max-w-2xl font-display text-5xl leading-tight md:text-6xl"
-          data-aos="fade-up"
-        >
-          The lookbook
-        </h2>
-        <div class="grid auto-rows-[260px] grid-cols-2 gap-4 md:grid-cols-4">
-          <div
-            v-for="(l, i) in lookbook"
-            :key="l.alt"
-            class="overflow-hidden rounded-3xl"
-            :class="l.cls"
-            data-aos="zoom-in"
-            :data-aos-delay="i * 100"
-          >
-            <img
-              :src="l.img"
-              :alt="l.alt"
-              loading="lazy"
-              class="h-full w-full object-cover transition duration-700 hover:scale-105"
-            />
-          </div>
-        </div>
-      </div>
-    </section> -->
-
-    <!-- CUSTOM PROCESS + FORM -->
-    <section id="custom" class="bg-[#FFE6D6] py-28">
-      <div class="mx-auto max-w-7xl px-6">
-        <div class="mx-auto max-w-3xl text-center" data-aos="fade-up">
-          <h2 class="font-display text-5xl leading-tight md:text-6xl">
-            Your style. Your measurements.
-          </h2>
-          <p class="mt-5 text-[#5A413A]">
-            Submitting the form is an enquiry only. It does not confirm an order. We review every
-            request and agree the details with you first.
-          </p>
-        </div>
-
-        <ol class="mt-14 grid gap-5 md:grid-cols-4">
-          <li
-            v-for="(s, i) in steps"
-            :key="s.title"
-            class="rounded-3xl bg-[#FFF7F1] p-6"
-            data-aos="fade-up"
-            :data-aos-delay="i * 100"
-          >
-            <span
-              class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F59A6C] text-lg"
-              ><i :class="s.icon"></i
-            ></span>
-            <h3 class="font-display text-xl">{{ i + 1 }}. {{ s.title }}</h3>
-            <p class="mt-1 text-sm text-[#5A413A]">{{ s.text }}</p>
-          </li>
-        </ol>
-
-        <div
-          class="mx-auto mt-14 max-w-4xl rounded-[2rem] bg-white p-6 shadow-xl md:p-10"
-          data-aos="fade-up"
-        >
-          <Transition name="swap" mode="out-in">
-            <div v-if="status === 'done'" key="ok" class="py-16 text-center">
-              <span
-                class="pop mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#FFC4A3] text-3xl"
-                ><i class="fa-solid fa-check"></i
-              ></span>
-              <h3 class="font-display text-3xl">Request received</h3>
-              <p class="mx-auto mt-2 max-w-md text-[#5A413A]">
-                Our team will review your design and measurements and contact you to confirm
-                feasibility, price and timing.
-              </p>
-            </div>
-
-            <form v-else key="form" class="space-y-10" @submit.prevent="submitCustom" novalidate>
-              <fieldset class="grid gap-4 md:grid-cols-2">
-                <legend class="mb-4 font-display text-2xl">Tell us about your design</legend>
-                <input
-                  v-model="form.name"
-                  class="field"
-                  placeholder="Full name *"
-                  autocomplete="name"
-                />
-                <input
-                  v-model="form.email"
-                  type="email"
-                  class="field"
-                  placeholder="Email address *"
-                  autocomplete="email"
-                />
-                <input
-                  v-model="form.phone"
-                  class="field"
-                  placeholder="Telephone with country code"
-                  autocomplete="tel"
-                />
-                <input v-model="form.country" class="field" placeholder="Delivery country" />
-                <input
-                  v-model="form.outfit"
-                  class="field"
-                  placeholder="Outfit type or product reference *"
-                />
-                <input v-model="form.needBy" type="date" class="field" aria-label="Date needed" />
-                <input v-model="form.fabric" class="field" placeholder="Preferred fabric" />
-                <input v-model="form.colour" class="field" placeholder="Preferred colour" />
-                <textarea
-                  v-model="form.notes"
-                  rows="3"
-                  class="field md:col-span-2"
-                  placeholder="Design details, fit preferences, event date and location"
-                ></textarea>
-              </fieldset>
-
-              <fieldset>
-<div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-  <legend class="font-display text-2xl">Your measurements</legend>
-
-  <div class="flex flex-col gap-3 min-[400px]:flex-row sm:items-center">
-    <!-- Garment type -->
-    <div
-      class="seg flex w-full min-w-0 sm:w-auto"
-      role="group"
-      aria-label="Garment type"
-    >
-      <button
-        type="button"
-        class="flex-1 whitespace-nowrap text-center sm:flex-none"
-        :class="{ on: garment === 'dress' }"
-        @click="garment = 'dress'"
-      >
-        Dresses and fitted
-      </button>
-
-      <button
-        type="button"
-        class="flex-1 whitespace-nowrap text-center sm:flex-none"
-        :class="{ on: garment === 'trouser' }"
-        @click="garment = 'trouser'"
-      >
-        Trousers and skirts
-      </button>
-    </div>
-
-    <!-- Measurement unit -->
-    <div
-      class="seg flex w-full sm:w-auto"
-      role="group"
-      aria-label="Unit"
-    >
-      <button
-        type="button"
-        class="flex-1 sm:flex-none"
-        :class="{ on: unit === 'cm' }"
-        @click="unit = 'cm'"
-      >
-        cm
-      </button>
-
-      <button
-        type="button"
-        class="flex-1 sm:flex-none"
-        :class="{ on: unit === 'in' }"
-        @click="unit = 'in'"
-      >
-        in
-      </button>
-    </div>
-  </div>
-</div>
-
-                <p class="mb-5 text-sm text-[#5A413A]">
-                  <i class="fa-solid fa-circle-info mr-2 text-[#E2784A]"></i>Use a flexible tape,
-                  ideally with a helper. Keep it snug, not tight. Fill only what applies to your
-                  garment.
-                </p>
-                <TransitionGroup name="fld" tag="div" class="grid grid-cols-2 gap-4 md:grid-cols-4">
-                  <label v-for="f in currentFields" :key="garment + f" class="block text-sm">
-                    <span class="mb-1 block text-[#5A413A]">{{ f }}</span>
-                    <span class="relative block">
-                      <input
-                        v-model="measures[garment + '-' + f]"
-                        type="number"
-                        min="0"
-                        step="0.1"
-                        inputmode="decimal"
-                        class="field pr-10"
-                      />
-                      <span
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#9B7A6E]"
-                        >{{ unit }}</span
-                      >
-                    </span>
-                  </label>
-                </TransitionGroup>
-              </fieldset>
-
-              <fieldset>
-                <legend class="mb-4 font-display text-2xl">Reference material</legend>
-                <label
-                  class="flex cursor-pointer flex-col items-center rounded-3xl border-2 border-dashed border-[#F59A6C] bg-[#FFF7F1] p-8 text-center transition hover:bg-[#FFE6D6]"
-                >
-                  <i class="fa-solid fa-cloud-arrow-up mb-3 text-3xl text-[#E2784A]"></i>
-                  <span>Upload photos, sketches or PDFs</span>
-                  <span class="text-xs text-[#9B7A6E]"
-                    >Up to 5 files, {{ MAX_MB }}MB each. References guide the design and do not
-                    guarantee an exact copy.</span
-                  >
-                  <input
-                    type="file"
-                    class="sr-only"
-                    multiple
-                    accept="image/*,application/pdf"
-                    @change="onFiles"
-                  />
-                </label>
-                <ul v-if="files.length" class="mt-4 flex flex-wrap gap-2 text-sm">
-                  <li v-for="f in files" :key="f.name" class="rounded-full bg-[#FFE6D6] px-3 py-1">
-                    <i class="fa-regular fa-file mr-2"></i>{{ f.name }}
-                  </li>
-                </ul>
-              </fieldset>
-
-              <div class="space-y-3 text-sm">
-                <label class="flex items-start gap-3"
-                  ><input v-model="form.accurate" type="checkbox" class="mt-1 accent-[#E2784A]" /> I
-                  confirm that the measurements supplied are accurate to the best of my
-                  knowledge.</label
-                >
-                <label class="flex items-start gap-3"
-                  ><input v-model="form.terms" type="checkbox" class="mt-1 accent-[#E2784A]" /> I
-                  have read the <a href="/privacy-policy" class="underline">Privacy Policy</a> and
-                  <a href="/customisation-terms" class="underline">Customisation Terms</a>.</label
-                >
-              </div>
-
-              <p
-                v-if="errorMsg"
-                class="rounded-xl bg-[#FFE0D6] px-4 py-3 text-sm text-[#9A3412]"
-                role="alert"
-              >
-                <i class="fa-solid fa-triangle-exclamation mr-2"></i>{{ errorMsg }}
-              </p>
-
-              <button class="btn-peach w-full justify-center py-4" :disabled="status === 'sending'">
-                <i v-if="status === 'sending'" class="fa-solid fa-circle-notch fa-spin mr-2"></i>
-                {{ status === 'sending' ? 'Sending...' : 'Submit customisation request' }}
-              </button>
-            </form>
-          </Transition>
-        </div>
-      </div>
-    </section>
-
-    <!-- NEW: TESTIMONIALS -->
-    <!-- <section class="mx-auto max-w-7xl px-6 py-28">
-      <h2
-        class="mb-12 max-w-2xl font-display text-5xl leading-tight md:text-6xl"
-        data-aos="fade-up"
-      >
-        Words from our customers
-      </h2>
-      <div class="grid gap-6 md:grid-cols-3">
-        <figure
-          v-for="(t, i) in testimonials"
-          :key="i"
-          class="rounded-3xl border border-[#2A1B16]/10 bg-white/60 p-8"
-          data-aos="fade-up"
-          :data-aos-delay="i * 120"
-        >
-          <i class="fa-solid fa-quote-left mb-4 text-2xl text-[#E2784A]"></i>
-          <blockquote class="leading-relaxed text-[#5A413A]">{{ t.quote }}</blockquote>
-          <figcaption class="mt-6 text-sm">
-            <span class="font-semibold">{{ t.name }}</span> · {{ t.place }}
-          </figcaption>
-        </figure>
-      </div>
-    </section> -->
-
-    <!-- PRESS -->
-    <section id="press" class="mx-auto max-w-7xl px-6 py-28">
-      <div class="mb-12 flex flex-wrap items-end justify-between gap-6" data-aos="fade-up">
-        <h2 class="max-w-xl font-display text-5xl leading-tight md:text-6xl">
-          AnniePetars in the fashion industry
-        </h2>
-        <a :href="`mailto:${EMAIL}`" class="btn-ghost">Contact the media team</a>
-      </div>
-      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <article
-          v-for="(p, i) in pressItems"
-          :key="p.title"
-          class="rounded-3xl border border-[#2A1B16]/10 p-7 transition hover:-translate-y-2 hover:bg-[#FFE6D6]"
-          data-aos="fade-up"
-          :data-aos-delay="i * 100"
-        >
-          <i :class="p.icon" class="mb-5 text-2xl text-[#E2784A]"></i>
-          <h3 class="font-display text-2xl">{{ p.title }}</h3>
-          <p class="mt-2 text-sm text-[#5A413A]">{{ p.text }}</p>
-        </article>
-      </div>
-      <p class="mt-8 max-w-2xl text-[#5A413A]" data-aos="fade-up">
-        We welcome proposals from photographers, stylists, models, writers, retailers, event
-        organisers and creative institutions. Send your project summary, timeline and audience to
-        <a :href="`mailto:${EMAIL}`" class="underline">{{ EMAIL }}</a
-        >.
-      </p>
-    </section>
-
-    <!-- NEW: FAQ -->
-    <section class="bg-[#FFE6D6] py-28">
-      <div class="mx-auto max-w-3xl px-6">
-        <h2 class="mb-10 text-center font-display text-5xl md:text-6xl" data-aos="fade-up">
-          Frequently asked questions
-        </h2>
-        <div class="space-y-3">
-          <div
-            v-for="(f, i) in faqs"
-            :key="f.q"
-            class="rounded-2xl bg-white"
-            data-aos="fade-up"
-            :data-aos-delay="i * 60"
-          >
-            <button
-              type="button"
-              class="flex w-full items-center justify-between gap-4 p-5 text-left font-semibold"
-              :aria-expanded="openFaq === i"
-              @click="openFaq = openFaq === i ? null : i"
-            >
-              {{ f.q }}
-              <i
-                class="fa-solid fa-plus text-[#E2784A] transition-transform duration-300"
-                :class="{ 'rotate-45': openFaq === i }"
-              ></i>
-            </button>
-            <Transition name="drop">
-              <p v-if="openFaq === i" class="px-5 pb-5 text-sm text-[#5A413A]">{{ f.a }}</p>
-            </Transition>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- NEW: FINAL CTA BANNER -->
+    <!-- FINAL CTA BANNER -->
     <section class="mx-auto max-w-7xl px-6 py-28">
       <div
         class="rounded-[2rem] bg-[#F59A6C] px-8 py-16 text-center md:py-20"
@@ -984,156 +517,7 @@ const joinNews = () => {
       </div>
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact" class="bg-[#2A1B16] py-28 text-[#FFF7F1]">
-      <div class="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2">
-        <div data-aos="fade-right">
-          <h2 class="font-display text-5xl leading-tight md:text-6xl">
-            We would like to hear from you
-          </h2>
-          <p class="mt-5 max-w-md text-[#FFD9C2]">
-            Collections, custom outfits, collaborations or press: tell us what you need and we will
-            route it to the right person.
-          </p>
-          <ul class="mt-10 space-y-5">
-            <li>
-              <a :href="`mailto:${EMAIL}`" class="flex items-center gap-4 hover:text-[#FFC4A3]"
-                ><i class="fa-regular fa-envelope w-6 text-xl"></i>{{ EMAIL }}</a
-              >
-            </li>
-            <li>
-              <a
-                :href="`tel:${PHONE.replace(/\s/g, '')}`"
-                class="flex items-center gap-4 hover:text-[#FFC4A3]"
-                ><i class="fa-solid fa-phone w-6 text-xl"></i>{{ PHONE }}</a
-              >
-            </li>
-            <li>
-              <a
-                :href="WHATSAPP"
-                target="_blank"
-                rel="noopener"
-                class="flex items-center gap-4 hover:text-[#FFC4A3]"
-                ><i class="fa-brands fa-whatsapp w-6 text-xl"></i>Chat on WhatsApp</a
-              >
-            </li>
-          </ul>
-        </div>
-        <form
-          class="space-y-4 rounded-[2rem] bg-[#3A251E] p-8"
-          data-aos="fade-left"
-          @submit.prevent="sendContact"
-        >
-          <template v-if="!contactSent">
-            <input v-model="contact.name" class="field-dark" placeholder="Full name" />
-            <input
-              v-model="contact.email"
-              type="email"
-              class="field-dark"
-              placeholder="Email address"
-            />
-            <select v-model="contact.type" class="field-dark" aria-label="Enquiry type">
-              <option
-                v-for="t in [
-                  'General enquiry',
-                  'Customer service',
-                  'Custom outfit',
-                  'Press / media',
-                  'Sponsorship',
-                  'Partnership',
-                  'Retail',
-                  'Event / exhibition'
-                ]"
-                :key="t"
-              >
-                {{ t }}
-              </option>
-            </select>
-            <textarea
-              v-model="contact.message"
-              rows="4"
-              class="field-dark"
-              placeholder="Your message and any relevant dates"
-            ></textarea>
-            <button class="btn-peach w-full justify-center">Send your enquiry</button>
-          </template>
-          <p v-else class="py-10 text-center text-lg">
-            <i class="fa-solid fa-circle-check mr-2 text-[#FFC4A3]"></i>Thank you. We will be in
-            touch.
-          </p>
-        </form>
-      </div>
-    </section>
-
-    <!-- NEWSLETTER + FOOTER -->
-    <footer class="bg-[#FFC4A3] pt-20">
-      <div class="mx-auto max-w-7xl px-6">
-        <div class="grid items-center gap-8 pb-16 lg:grid-cols-2" data-aos="fade-up">
-          <div>
-            <h2 class="font-display text-4xl md:text-5xl">Be part of the AnniePetars story</h2>
-            <p class="mt-3 max-w-md text-sm">
-              Selected updates on collections, projects and events. Unsubscribe anytime. See our
-              Privacy Policy.
-            </p>
-          </div>
-          <form class="flex gap-2 rounded-full bg-white p-2" @submit.prevent="joinNews">
-            <input
-              v-model="news.email"
-              type="email"
-              class="min-w-0 flex-1 bg-transparent px-4 outline-none"
-              placeholder="Enter your email address"
-              aria-label="Email address"
-            />
-            <button class="btn-dark">{{ news.done ? 'Joined' : 'Join our mailing list' }}</button>
-          </form>
-        </div>
-        <div
-          class="flex flex-wrap items-center justify-between gap-6 border-t border-[#2A1B16]/20 py-8 text-sm"
-        >
-          <a href="#top" class="rounded-2xl bg-white px-5 py-3" aria-label="AnniePetars home">
-            <img src="../assets/annie-peters-logo.png" alt="AnniePetars" class="h-10 w-auto" />
-          </a>
-          <p class="max-w-sm">
-            Celebrating African heritage through contemporary fashion, distinctive design and
-            individual expression.
-          </p>
-          <div class="flex gap-5 text-xl">
-            <a :href="WHATSAPP" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a
-            ><a :href="`mailto:${EMAIL}`" aria-label="Email"
-              ><i class="fa-regular fa-envelope"></i
-            ></a>
-          </div>
-        </div>
-        <nav class="flex flex-wrap gap-x-6 gap-y-2 pb-10 text-xs" aria-label="Legal">
-          <a
-            v-for="l in [
-              'Privacy Policy',
-              'Cookie Policy',
-              'Terms and Conditions',
-              'Delivery and Shipping',
-              'Returns and Refunds',
-              'Customisation Terms',
-              'Accessibility Statement'
-            ]"
-            :key="l"
-            href="#"
-            class="link-u"
-            >{{ l }}</a
-          >
-        </nav>
-      </div>
-    </footer>
-
-    <!-- Floating WhatsApp -->
-    <a
-      :href="WHATSAPP"
-      target="_blank"
-      rel="noopener"
-      aria-label="Chat on WhatsApp"
-      class="wa fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-3xl text-white shadow-xl"
-    >
-      <i class="fa-brands fa-whatsapp"></i>
-    </a>
+   
   </div>
 </template>
 
