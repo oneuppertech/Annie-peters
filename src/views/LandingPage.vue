@@ -185,6 +185,45 @@ const marquee = [
   'Heritage'
 ]
 
+/* ---------- NEW: trust bar, best sellers, lookbook, testimonials, FAQ ---------- */
+const trust = [
+  { icon: 'fa-solid fa-truck-fast', title: 'Worldwide delivery', text: 'Nigeria, UK, USA, Ghana and beyond.' },
+  { icon: 'fa-solid fa-ruler-combined', title: 'Made-to-measure', text: 'Fitted to your measurements.' },
+  { icon: 'fa-solid fa-rotate-left', title: 'Easy returns', text: 'On eligible ready-to-wear pieces.' },
+  { icon: 'fa-solid fa-lock', title: 'Secure checkout', text: 'Protected payments on our shop.' }
+]
+
+// Replace names, prices and slugs with real products
+const bestSellers = [
+  { name: 'Signature Print Dress', price: '₦85,000', img: rtwImage, slug: 'signature-print-dress' },
+  { name: 'Contemporary Agbada Set', price: '₦150,000', img: contemporaryImage, slug: 'agbada-set' },
+  { name: 'Bridal Corset Gown', price: '₦320,000', img: bridalImage, slug: 'bridal-corset-gown' },
+  { name: 'Aso Ebi Two-Piece', price: '₦70,000', img: asoEbiImage, slug: 'aso-ebi-two-piece' }
+]
+
+const lookbook = [
+  { img: newDesignImage, alt: 'New design', cls: 'row-span-2' },
+  { img: standImage, alt: 'Stand Official 001', cls: '' },
+  { img: girlChildImage, alt: 'The Girl Child Love', cls: '' },
+  { img: madeToMeasureImage, alt: 'Made-to-measure outfit', cls: 'col-span-2' }
+]
+
+// Placeholders: replace with real, permissioned customer quotes only
+const testimonials = [
+  { quote: 'Replace with a real customer quote.', name: 'Customer name', place: 'Lagos, Nigeria' },
+  { quote: 'Replace with a real customer quote.', name: 'Customer name', place: 'London, UK' },
+  { quote: 'Replace with a real customer quote.', name: 'Customer name', place: 'Accra, Ghana' }
+]
+
+const faqs = [
+  { q: 'How long does a custom outfit take?', a: 'Timelines are confirmed with you before production starts and depend on the design and fabric.' },
+  { q: 'Do you ship internationally?', a: 'Yes. We deliver to Nigeria, the UK, the USA, Ghana and other destinations. See Delivery and Shipping for details.' },
+  { q: 'Can I return a made-to-measure piece?', a: 'Custom pieces are made for you, so please see our Customisation Terms and Returns and Refunds policy.' },
+  { q: 'How do I take my measurements?', a: 'Use a flexible tape, keep it snug but not tight, and use the same unit throughout. The custom form above guides you.' },
+  { q: 'Can you match a reference photo?', a: 'References guide the design but do not guarantee an exact copy. We confirm feasibility first.' }
+]
+const openFaq = ref(null)
+
 /* ---------- Measurement form (stays on page) ---------- */
 const unit = ref('cm')
 const garment = ref('dress')
@@ -400,6 +439,28 @@ const joinNews = () => {
       </div>
     </div>
 
+    <!-- NEW: TRUST BAR -->
+    <section class="mx-auto max-w-7xl px-6 pt-20">
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          v-for="(t, i) in trust"
+          :key="t.title"
+          class="flex items-start gap-4"
+          data-aos="fade-up"
+          :data-aos-delay="i * 100"
+        >
+          <span
+            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#FFC4A3]"
+            ><i :class="t.icon"></i
+          ></span>
+          <div>
+            <h3 class="font-display text-xl">{{ t.title }}</h3>
+            <p class="text-sm text-[#5A413A]">{{ t.text }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- INTRO / PHILOSOPHY -->
     <section class="mx-auto max-w-7xl px-6 py-28">
       <div class="grid gap-16 lg:grid-cols-12">
@@ -485,6 +546,37 @@ const joinNews = () => {
       </div>
     </section>
 
+    <!-- NEW: BEST SELLERS -->
+    <!-- <section class="mx-auto max-w-7xl px-6 py-28">
+      <div class="mb-12 flex flex-wrap items-end justify-between gap-6" data-aos="fade-up">
+        <h2 class="max-w-xl font-display text-5xl leading-tight md:text-6xl">
+          Customer favourites
+        </h2>
+        <a :href="SHOP_URL" class="btn-ghost">View all</a>
+      </div>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <a
+          v-for="(p, i) in bestSellers"
+          :key="p.slug"
+          :href="`${SHOP_URL}/products/${p.slug}`"
+          class="group"
+          data-aos="fade-up"
+          :data-aos-delay="i * 100"
+        >
+          <div class="aspect-[3/4] overflow-hidden rounded-3xl bg-[#FFD9C2]">
+            <img
+              :src="p.img"
+              :alt="p.name"
+              loading="lazy"
+              class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+            />
+          </div>
+          <h3 class="mt-4 font-display text-xl">{{ p.name }}</h3>
+          <p class="text-sm text-[#C4623A]">{{ p.price }}</p>
+        </a>
+      </div>
+    </section> -->
+
     <!-- DESIGNER -->
     <section id="designer" class="mx-auto max-w-7xl px-6 py-28">
       <div class="grid items-center gap-16 lg:grid-cols-2">
@@ -532,6 +624,35 @@ const joinNews = () => {
         </div>
       </div>
     </section>
+
+    <!-- NEW: LOOKBOOK -->
+    <!-- <section class="bg-[#FFE6D6] py-28">
+      <div class="mx-auto max-w-7xl px-6">
+        <h2
+          class="mb-12 max-w-2xl font-display text-5xl leading-tight md:text-6xl"
+          data-aos="fade-up"
+        >
+          The lookbook
+        </h2>
+        <div class="grid auto-rows-[260px] grid-cols-2 gap-4 md:grid-cols-4">
+          <div
+            v-for="(l, i) in lookbook"
+            :key="l.alt"
+            class="overflow-hidden rounded-3xl"
+            :class="l.cls"
+            data-aos="zoom-in"
+            :data-aos-delay="i * 100"
+          >
+            <img
+              :src="l.img"
+              :alt="l.alt"
+              loading="lazy"
+              class="h-full w-full object-cover transition duration-700 hover:scale-105"
+            />
+          </div>
+        </div>
+      </div>
+    </section> -->
 
     <!-- CUSTOM PROCESS + FORM -->
     <section id="custom" class="bg-[#FFE6D6] py-28">
@@ -759,6 +880,31 @@ const joinNews = () => {
       </div>
     </section>
 
+    <!-- NEW: TESTIMONIALS -->
+    <!-- <section class="mx-auto max-w-7xl px-6 py-28">
+      <h2
+        class="mb-12 max-w-2xl font-display text-5xl leading-tight md:text-6xl"
+        data-aos="fade-up"
+      >
+        Words from our customers
+      </h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        <figure
+          v-for="(t, i) in testimonials"
+          :key="i"
+          class="rounded-3xl border border-[#2A1B16]/10 bg-white/60 p-8"
+          data-aos="fade-up"
+          :data-aos-delay="i * 120"
+        >
+          <i class="fa-solid fa-quote-left mb-4 text-2xl text-[#E2784A]"></i>
+          <blockquote class="leading-relaxed text-[#5A413A]">{{ t.quote }}</blockquote>
+          <figcaption class="mt-6 text-sm">
+            <span class="font-semibold">{{ t.name }}</span> · {{ t.place }}
+          </figcaption>
+        </figure>
+      </div>
+    </section> -->
+
     <!-- PRESS -->
     <section id="press" class="mx-auto max-w-7xl px-6 py-28">
       <div class="mb-12 flex flex-wrap items-end justify-between gap-6" data-aos="fade-up">
@@ -786,6 +932,56 @@ const joinNews = () => {
         <a :href="`mailto:${EMAIL}`" class="underline">{{ EMAIL }}</a
         >.
       </p>
+    </section>
+
+    <!-- NEW: FAQ -->
+    <section class="bg-[#FFE6D6] py-28">
+      <div class="mx-auto max-w-3xl px-6">
+        <h2 class="mb-10 text-center font-display text-5xl md:text-6xl" data-aos="fade-up">
+          Frequently asked questions
+        </h2>
+        <div class="space-y-3">
+          <div
+            v-for="(f, i) in faqs"
+            :key="f.q"
+            class="rounded-2xl bg-white"
+            data-aos="fade-up"
+            :data-aos-delay="i * 60"
+          >
+            <button
+              type="button"
+              class="flex w-full items-center justify-between gap-4 p-5 text-left font-semibold"
+              :aria-expanded="openFaq === i"
+              @click="openFaq = openFaq === i ? null : i"
+            >
+              {{ f.q }}
+              <i
+                class="fa-solid fa-plus text-[#E2784A] transition-transform duration-300"
+                :class="{ 'rotate-45': openFaq === i }"
+              ></i>
+            </button>
+            <Transition name="drop">
+              <p v-if="openFaq === i" class="px-5 pb-5 text-sm text-[#5A413A]">{{ f.a }}</p>
+            </Transition>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEW: FINAL CTA BANNER -->
+    <section class="mx-auto max-w-7xl px-6 py-28">
+      <div
+        class="rounded-[2rem] bg-[#F59A6C] px-8 py-16 text-center md:py-20"
+        data-aos="zoom-in"
+      >
+        <h2 class="mx-auto max-w-2xl font-display text-4xl leading-tight md:text-6xl">
+          Ready to wear your story?
+        </h2>
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+          <a :href="SHOP_URL" class="btn-dark">Shop now</a>
+          <a href="#custom" class="btn-ghost">Request a custom outfit</a>
+        </div>
+      </div>
     </section>
 
     <!-- CONTACT -->
