@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import logo from '@/assets/annie-peters-logo.png'
 import { SHOP_URL } from '@/config/site'
@@ -8,6 +8,8 @@ const route = useRoute()
 const open = ref(false)
 const scrolled = ref(false)
 const onScroll = () => (scrolled.value = window.scrollY > 40)
+
+const isHomePage = computed(() => route.name === 'home')
 
 const links = [
   { label: 'Collections', to: { name: 'collections' } },
@@ -48,11 +50,21 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
         </RouterLink>
       </nav>
 
-      <div class="hidden lg:block">
-        <a :href="SHOP_URL" class="btn-peach">
-          Shop now <i class="fa-solid fa-bag-shopping ml-2 text-xs"></i>
-        </a>
-      </div>
+      <div class="hidden items-center gap-3 lg:flex">
+  <RouterLink
+    v-if="!isHomePage"
+    :to="{ name: 'home' }"
+    class="btn-home"
+  >
+    <i class="fa-solid fa-arrow-left mr-2 text-xs"></i>
+    Back to Home
+  </RouterLink>
+
+  <a :href="SHOP_URL" class="btn-peach">
+    Shop now
+    <i class="fa-solid fa-bag-shopping ml-2 text-xs"></i>
+  </a>
+</div>
 
       <button
         class="text-xl lg:hidden"
@@ -69,13 +81,46 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
         <RouterLink v-for="l in links" :key="l.label" :to="l.to" class="block py-3 text-lg">
           {{ l.label }}
         </RouterLink>
-        <a :href="SHOP_URL" class="btn-peach mt-3 w-full justify-center">Shop now</a>
+
+        <RouterLink
+  v-if="!isHomePage"
+  :to="{ name: 'home' }"
+  class="btn-home mt-3 w-full justify-center"
+>
+  <i class="fa-solid fa-arrow-left mr-2 text-xs"></i>
+  Back to Home
+</RouterLink>
+
+<a :href="SHOP_URL" class="btn-peach mt-3 w-full justify-center">
+  Shop now
+</a>
       </nav>
     </Transition>
   </header>
 </template>
 
 <style scoped>
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #eadbd3;
+  border-radius: 999px;
+  padding: 0.85rem 1.3rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: #fff;
+  color: #2a1b16;
+  transition:
+    background 0.3s,
+    border-color 0.3s,
+    transform 0.3s;
+}
+
+.btn-home:hover {
+  background: #fff4ed;
+  border-color: #f59a6c;
+  transform: translateY(-2px);
+}
 .ap-header { font-family: 'Manrope', system-ui, sans-serif; color: #2a1b16; }
 .btn-peach {
   display: inline-flex; align-items: center; border-radius: 999px; padding: 0.85rem 1.6rem;
