@@ -1,19 +1,25 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script>
-      ;(function () {
-        const search = window.location.search
+    
+<script>
+  (function () {
+    var search = window.location.search;
 
-        if (search.startsWith('?/')) {
-          const route = search.slice(2).replace(/~and~/g, '&')
+    if (search.startsWith('?/')) {
+      var route = search
+        .slice(2)
+        .replace(/~and~/g, '&');
 
-          const newUrl = window.location.pathname + route + window.location.hash
+      window.history.replaceState(
+        null,
+        '',
+        '/' + route + window.location.hash
+      );
+    }
+  })();
+</script>
 
-          window.history.replaceState(null, '', newUrl)
-        }
-      })()
-    </script>
 
     <meta charset="UTF-8" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

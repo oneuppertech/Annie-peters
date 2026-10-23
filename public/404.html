@@ -5,26 +5,19 @@
     <meta charset="utf-8" />
     <title>Redirecting...</title>
     <script>
-      const segmentCount = 1;
+      (function () {
+        var currentPath = window.location.pathname;
+        var redirect =
+          currentPath +
+          window.location.search +
+          window.location.hash;
 
-      const location = window.location;
-      const pathSegments = location.pathname
-        .split('/')
-        .filter(Boolean);
-
-      const repo = pathSegments.slice(0, segmentCount);
-      const route = pathSegments.slice(segmentCount);
-
-      const redirectUrl =
-        location.origin +
-        '/' +
-        repo.join('/') +
-        '/?/' +
-        route.join('/') +
-        location.search +
-        location.hash;
-
-      location.replace(redirectUrl);
+        window.location.replace(
+          window.location.origin +
+          '/?/' +
+          redirect.replace(/^\//, '')
+        );
+      })();
     </script>
   </head>
   <body>
