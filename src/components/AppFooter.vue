@@ -18,15 +18,15 @@ const pages = [
   { label: 'Press', to: { name: 'press' } },
   { label: 'FAQ', to: { name: 'faq' } }
 ]
-// Point these at real routes/URLs when the pages exist
+// Add a `to` as each policy page is built; items without one stay as placeholders
 const legal = [
-  'Privacy Policy',
-  'Cookie Policy',
-  'Terms and Conditions',
-  'Delivery and Shipping',
-  'Returns and Refunds',
-  'Customisation Terms',
-  'Accessibility Statement'
+  { label: 'Privacy Policy', to: { name: 'privacy-policy' } },
+  { label: 'Cookie Policy', to: { name: 'cookie-policy' } },
+  { label: 'Website Terms and Conditions', to: { name: 'terms' } },
+  { label: 'Delivery and Shipping' },
+  { label: 'Returns and Refunds' },
+  { label: 'Customisation Terms' },
+  { label: 'Accessibility Statement' }
 ]
 </script>
 
@@ -71,7 +71,10 @@ const legal = [
         <RouterLink v-for="p in pages" :key="p.label" :to="p.to" class="link-u">{{ p.label }}</RouterLink>
       </nav>
       <nav class="flex flex-wrap gap-x-6 gap-y-2 pb-10 text-xs" aria-label="Legal">
-        <a v-for="l in legal" :key="l" href="#" class="link-u">{{ l }}</a>
+        <template v-for="l in legal" :key="l.label">
+          <RouterLink v-if="l.to" :to="l.to" class="link-u">{{ l.label }}</RouterLink>
+          <a v-else href="#" class="link-u">{{ l.label }}</a>
+        </template>
       </nav>
     </div>
   </footer>

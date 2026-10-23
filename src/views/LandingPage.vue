@@ -46,8 +46,11 @@ const links = [
 /* ---------- NEW: two-column collections with write-ups ---------- */
 const collections = [
   {
-    id: 'c-rtw', slug: 'ready-to-wear', img: rtwImage,
-    name: 'Annie’s Ready-to-Wear (A-RTW)', line: 'Everyday style, thoughtfully designed.',
+    id: 'c-rtw',
+    slug: 'ready-to-wear',
+    img: rtwImage,
+    name: 'Annie’s Ready-to-Wear (A-RTW)',
+    line: 'Everyday style, thoughtfully designed.',
     paras: [
       'Annie’s Ready-to-Wear collection brings contemporary fashion into everyday life. It is intended for women who appreciate clothing that feels considered, expressive and suitable for a range of settings. Depending on the design, pieces may be styled for daytime activities, social gatherings, work-related occasions or relaxed events.',
       'The collection focuses on the relationship between comfort, appearance and individual style. Customers should review each product listing for confirmed fabric details, available sizes, colour options, care instructions and current availability.'
@@ -55,8 +58,11 @@ const collections = [
     cta: 'Explore Ready-to-Wear'
   },
   {
-    id: 'c-suits', slug: 'african-suits', img: contemporaryImage,
-    name: 'Contemporary African Suits', line: 'African heritage meets modern tailoring.',
+    id: 'c-suits',
+    slug: 'african-suits',
+    img: contemporaryImage,
+    name: 'Contemporary African Suits',
+    line: 'African heritage meets modern tailoring.',
     paras: [
       'The Contemporary African Suits collection explores African-inspired textiles and design details through modern tailoring. The collection is intended for customers who want a polished outfit with character, whether for professional engagements, celebrations, formal gatherings or other occasions where presentation matters.',
       'Each product listing should explain the garment’s cut, fabric, fastening, fit, available sizes and any styling details relevant to the design. Where a customer requires adjustments, the team can review whether customisation is available for the selected garment.'
@@ -64,35 +70,50 @@ const collections = [
     cta: 'Explore Contemporary African Suits'
   },
   {
-    id: 'c-bride', slug: 'bridal', img: bridalImage,
-    name: 'Focus on the Bride', line: 'Designed for one of life’s meaningful moments.',
+    id: 'c-bride',
+    slug: 'bridal',
+    img: bridalImage,
+    name: 'Focus on the Bride',
+    line: 'Designed for one of life’s meaningful moments.',
     paras: [
       'Focus on the Bride celebrates the personality and preferences of each bride. Bridal style is personal, and the right outfit should reflect the wearer’s vision for the day. This collection explores bridal designs influenced by African fashion, distinctive details and silhouettes suited to different tastes.',
       'Customers planning a bridal outfit should contact AnniePetars early to discuss the design concept, event date, measurements, fabric preferences, fitting requirements and production schedule. A request is not confirmed until the design, price and timeline have been agreed in writing.'
     ],
-    cta: 'Discuss a Bridal Design', href: '#custom'
+    cta: 'Discuss a Bridal Design',
+    href: '#custom'
   },
   {
-    id: 'c-aso', slug: 'aso-ebi', img: asoEbiImage,
-    name: 'Aso Ebi Special', line: 'Together in style, united by tradition.',
+    id: 'c-aso',
+    slug: 'aso-ebi',
+    img: asoEbiImage,
+    name: 'Aso Ebi Special',
+    line: 'Together in style, united by tradition.',
     paras: [
       'Aso Ebi is associated with family, friendship, community and shared celebration. The Aso Ebi Special collection brings a contemporary design perspective to coordinated dressing for weddings, birthdays, anniversaries and other memorable gatherings.',
       'For group enquiries, please provide the event date, number of outfits, preferred fabric or colour direction, approximate size range and delivery location. Availability, minimum quantities, fabric sourcing, pricing and production timing should be confirmed directly with the team before a group order is finalised.'
     ],
-    cta: 'Enquire About Aso Ebi', href: '#contact'
+    cta: 'Enquire About Aso Ebi',
+    href: '#contact'
   },
   {
-    id: 'c-mtm', slug: 'made-to-measure', img: madeToMeasureImage,
-    name: 'Made-to-Measure Designs', line: 'Your measurements. Your preferences. Your design.',
+    id: 'c-mtm',
+    slug: 'made-to-measure',
+    img: madeToMeasureImage,
+    name: 'Made-to-Measure Designs',
+    line: 'Your measurements. Your preferences. Your design.',
     paras: [
       'The Made-to-Measure service offers customers the opportunity to discuss a garment shaped around their measurements and personal preferences. The process begins with understanding the outfit, occasion, desired fit, design details and expected delivery date.',
       'Customers may submit measurements and reference images through the measurement request form. AnniePetars will review the submission and contact the customer if additional details or clarification are needed. The team will confirm feasibility, fabric availability, quotation, payment terms and estimated production time before accepting the order.'
     ],
-    cta: 'Submit Your Measurements', href: '#custom'
+    cta: 'Submit Your Measurements',
+    href: '#custom'
   },
   {
-    id: 'c-stand', slug: 'stand-official-001', img: standImage,
-    name: 'Stand Official 001', line: 'A distinctive expression of presence and purpose.',
+    id: 'c-stand',
+    slug: 'stand-official-001',
+    img: standImage,
+    name: 'Stand Official 001',
+    line: 'A distinctive expression of presence and purpose.',
     paras: [
       'Stand Official 001 explores polished dressing for formal engagements, professional occasions and events where presentation matters. The collection is for people who value a considered appearance while retaining a sense of personal identity.',
       'Product information should describe the cut, intended use, fit, fabric, available sizes and styling details for each garment. Any tailoring or customisation options should be stated clearly.'
@@ -100,8 +121,11 @@ const collections = [
     cta: 'Explore Stand Official 001'
   },
   {
-    id: 'c-girl', slug: 'girl-child', img: girlChildImage,
-    name: 'The Girl Child Love', line: 'Celebrating young girls through fashion, care and creativity.',
+    id: 'c-girl',
+    slug: 'girl-child',
+    img: girlChildImage,
+    name: 'The Girl Child Love',
+    line: 'Celebrating young girls through fashion, care and creativity.',
     paras: [
       'The Girl Child Love collection recognises the individuality, confidence and potential of young girls. It focuses on age-appropriate clothing and thoughtful styling that allows young wearers to feel comfortable and express their personality.',
       'The collection also reflects the brand’s interest in positive representation and the importance of recognising young girls as individuals with their own interests, preferences and aspirations. Product pages should clearly state age or size guidance, garment measurements, fabric information and care instructions.'
@@ -109,8 +133,11 @@ const collections = [
     cta: 'Explore The Girl Child Love'
   },
   {
-    id: 'c-new', slug: 'new-arrivals', img: newDesignImage,
-    name: 'New Designs, New Arrivals', line: 'Fresh additions. Individual style.',
+    id: 'c-new',
+    slug: 'new-arrivals',
+    img: newDesignImage,
+    name: 'New Designs, New Arrivals',
+    line: 'Fresh additions. Individual style.',
     paras: [
       'This section features new designs and recent additions to the AnniePetars range. Each arrival should be accompanied by clear product photography, a description of the design, available sizes and colours, price, fabric composition, care instructions and an estimated dispatch or production timeframe.',
       'Availability can change. Customers should contact the team if they need confirmation before placing an order.'
@@ -126,7 +153,8 @@ const article = {
   // Better: download this image into /src/assets and import it instead of hotlinking
   img: 'https://cdn.pmnewsnigeria.com/wp-content/uploads/2026/10/Annie-Peterson.jpg',
   source: 'P.M. News',
-  title: 'African fashion finds a modern voice through AnniePetars, the brand founded by Asana Peterson',
+  title:
+    'African fashion finds a modern voice through AnniePetars, the brand founded by Asana Peterson',
   author: 'Michael Adesina',
   date: '22nd February, 2024'
 }
@@ -149,11 +177,26 @@ const visionList = [
   'Present the brand’s work and milestones accurately, with clear supporting information.'
 ]
 const designerPhilosophy = [
-  { title: 'Identity is part of the design', text: 'Our starting point is an appreciation for the cultural influences, stories and visual language associated with African fashion. These influences inform the creative process without requiring every garment to follow the same style or occasion.' },
-  { title: 'Heritage and contemporary style can coexist', text: 'We explore ways to interpret African-inspired details through modern cuts, proportions and styling. This allows the brand to engage with contemporary wardrobes while maintaining a visible connection to its creative inspiration.' },
-  { title: 'Personal style deserves room', text: 'Customers have different preferences, body shapes, occasions and expectations. We aim to explain each design clearly and offer selected personalisation options where production requirements allow.' },
-  { title: 'Fit and communication matter', text: 'For made-to-measure requests, clear communication is essential. Customers should provide accurate measurements and design details, while AnniePetars should confirm the agreed specification, price and production schedule before work begins.' },
-  { title: 'Creative growth is collaborative', text: 'Fashion develops through conversations between designers, customers, makers, photographers, stylists, retailers, publications and other creative professionals. We welcome proposals that align with the brand’s direction and values.' }
+  {
+    title: 'Identity is part of the design',
+    text: 'Our starting point is an appreciation for the cultural influences, stories and visual language associated with African fashion. These influences inform the creative process without requiring every garment to follow the same style or occasion.'
+  },
+  {
+    title: 'Heritage and contemporary style can coexist',
+    text: 'We explore ways to interpret African-inspired details through modern cuts, proportions and styling. This allows the brand to engage with contemporary wardrobes while maintaining a visible connection to its creative inspiration.'
+  },
+  {
+    title: 'Personal style deserves room',
+    text: 'Customers have different preferences, body shapes, occasions and expectations. We aim to explain each design clearly and offer selected personalisation options where production requirements allow.'
+  },
+  {
+    title: 'Fit and communication matter',
+    text: 'For made-to-measure requests, clear communication is essential. Customers should provide accurate measurements and design details, while AnniePetars should confirm the agreed specification, price and production schedule before work begins.'
+  },
+  {
+    title: 'Creative growth is collaborative',
+    text: 'Fashion develops through conversations between designers, customers, makers, photographers, stylists, retailers, publications and other creative professionals. We welcome proposals that align with the brand’s direction and values.'
+  }
 ]
 
 const values = [
@@ -233,16 +276,33 @@ const marquee = [
 
 /* ---------- trust bar, best sellers, lookbook, testimonials, FAQ ---------- */
 const trust = [
-  { icon: 'fa-solid fa-truck-fast', title: 'Worldwide delivery', text: 'Nigeria, UK, USA, Ghana and beyond.' },
-  { icon: 'fa-solid fa-ruler-combined', title: 'Made-to-measure', text: 'Fitted to your measurements.' },
-  { icon: 'fa-solid fa-rotate-left', title: 'Easy returns', text: 'On eligible ready-to-wear pieces.' },
+  {
+    icon: 'fa-solid fa-truck-fast',
+    title: 'Worldwide delivery',
+    text: 'Nigeria, UK, USA, Ghana and beyond.'
+  },
+  {
+    icon: 'fa-solid fa-ruler-combined',
+    title: 'Made-to-measure',
+    text: 'Fitted to your measurements.'
+  },
+  {
+    icon: 'fa-solid fa-rotate-left',
+    title: 'Easy returns',
+    text: 'On eligible ready-to-wear pieces.'
+  },
   { icon: 'fa-solid fa-lock', title: 'Secure checkout', text: 'Protected payments on our shop.' }
 ]
 
 // Replace names, prices and slugs with real products
 const bestSellers = [
   { name: 'Signature Print Dress', price: '₦85,000', img: rtwImage, slug: 'signature-print-dress' },
-  { name: 'Contemporary Agbada Set', price: '₦150,000', img: contemporaryImage, slug: 'agbada-set' },
+  {
+    name: 'Contemporary Agbada Set',
+    price: '₦150,000',
+    img: contemporaryImage,
+    slug: 'agbada-set'
+  },
   { name: 'Bridal Corset Gown', price: '₦320,000', img: bridalImage, slug: 'bridal-corset-gown' },
   { name: 'Aso Ebi Two-Piece', price: '₦70,000', img: asoEbiImage, slug: 'aso-ebi-two-piece' }
 ]
@@ -262,11 +322,26 @@ const testimonials = [
 ]
 
 const faqs = [
-  { q: 'How long does a custom outfit take?', a: 'Timelines are confirmed with you before production starts and depend on the design and fabric.' },
-  { q: 'Do you ship internationally?', a: 'Yes. We deliver to Nigeria, the UK, the USA, Ghana and other destinations. See Delivery and Shipping for details.' },
-  { q: 'Can I return a made-to-measure piece?', a: 'Custom pieces are made for you, so please see our Customisation Terms and Returns and Refunds policy.' },
-  { q: 'How do I take my measurements?', a: 'Use a flexible tape, keep it snug but not tight, and use the same unit throughout. The custom form above guides you.' },
-  { q: 'Can you match a reference photo?', a: 'References guide the design but do not guarantee an exact copy. We confirm feasibility first.' }
+  {
+    q: 'How long does a custom outfit take?',
+    a: 'Timelines are confirmed with you before production starts and depend on the design and fabric.'
+  },
+  {
+    q: 'Do you ship internationally?',
+    a: 'Yes. We deliver to Nigeria, the UK, the USA, Ghana and other destinations. See Delivery and Shipping for details.'
+  },
+  {
+    q: 'Can I return a made-to-measure piece?',
+    a: 'Custom pieces are made for you, so please see our Customisation Terms and Returns and Refunds policy.'
+  },
+  {
+    q: 'How do I take my measurements?',
+    a: 'Use a flexible tape, keep it snug but not tight, and use the same unit throughout. The custom form above guides you.'
+  },
+  {
+    q: 'Can you match a reference photo?',
+    a: 'References guide the design but do not guarantee an exact copy. We confirm feasibility first.'
+  }
 ]
 const openFaq = ref(null)
 
@@ -371,8 +446,6 @@ const joinNews = () => {
 
 <template>
   <div class="ap bg-[#FFF7F1] text-[#2A1B16] antialiased overflow-x-hidden">
-    
-
     <!-- HERO -->
     <section id="top" class="relative min-h-screen pt-32 pb-20">
       <div class="blob blob-a"></div>
@@ -409,20 +482,21 @@ const joinNews = () => {
         </div>
 
         <div class="relative lg:col-span-5">
-          <div class="hero-frame rise" style="--d: 0.5s">
-            <img
-              src="../assets/hero.png"
-              alt="AnniePetars model wearing a contemporary African-inspired outfit"
-              class="h-full w-full object-cover"
-            />
-          </div>
-          <div
-            class="float-card absolute -left-4 bottom-10 hidden rounded-2xl bg-white p-4 shadow-xl sm:block md:-left-10"
-          >
-            <p class="font-display text-3xl leading-none">5+ years</p>
-            <p class="mt-1 text-xs text-[#5A413A]">Nigeria · UK · USA · Ghana</p>
-          </div>
-        </div>
+  <div class="hero-frame rise" style="--d: 0.5s">
+    <img
+      src="../assets/hero.jpeg"
+      alt="AnniePetars model wearing a contemporary African-inspired outfit"
+      class="block h-auto w-full"
+    />
+  </div>
+
+  <div
+    class="float-card absolute -left-4 bottom-10 hidden rounded-2xl bg-white p-4 shadow-xl sm:block md:-left-10"
+  >
+    <p class="font-display text-3xl leading-none">5+ years</p>
+    <p class="mt-1 text-xs text-[#5A413A]">Nigeria · UK · USA · Ghana</p>
+  </div>
+</div>
       </div>
     </section>
 
@@ -498,15 +572,9 @@ const joinNews = () => {
       </div>
     </section>
 
-    
-
-
     <!-- FINAL CTA BANNER -->
     <section class="mx-auto max-w-7xl px-6 py-28">
-      <div
-        class="rounded-[2rem] bg-[#F59A6C] px-8 py-16 text-center md:py-20"
-        data-aos="zoom-in"
-      >
+      <div class="rounded-[2rem] bg-[#F59A6C] px-8 py-16 text-center md:py-20" data-aos="zoom-in">
         <h2 class="mx-auto max-w-2xl font-display text-4xl leading-tight md:text-6xl">
           Ready to wear your story?
         </h2>
@@ -516,8 +584,6 @@ const joinNews = () => {
         </div>
       </div>
     </section>
-
-   
   </div>
 </template>
 
@@ -669,13 +735,25 @@ const joinNews = () => {
   }
 }
 
+
 .ap .hero-frame {
-  aspect-ratio: 4/5;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
   overflow: hidden;
   border-radius: 14rem 14rem 2rem 2rem;
   background: #ffd9c2;
   box-shadow: 0 40px 80px -30px rgba(196, 98, 58, 0.5);
 }
+
+.ap .hero-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+}
+
 .ap .blob {
   position: absolute;
   border-radius: 50%;
