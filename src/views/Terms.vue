@@ -9,7 +9,7 @@ const sections = [
     blocks: [
       {
         type: 'p',
-        text: 'Legal business name: ANNIE - PETARS. Trading name: AnniePetars. Business address:  3 Dafemola Afuye. Ifako Ijaye. Lagos Nigeria,  UK: Luton, United Kingdom. Contact email: fashion@anniepetars.com.'
+        text: 'Legal business name: ANNIE - PETARS. Trading name: AnniePetars. Business address:  9 OLUSEGUN STREET. , AJOKE AYO, KOLA, LAGOS STATE,  UK: Luton, United Kingdom. Contact email: fashion@anniepetars.com.'
       }
     ]
   },

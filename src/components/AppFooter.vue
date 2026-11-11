@@ -57,10 +57,19 @@ const legal = [
         <RouterLink :to="{ name: 'home' }" class="rounded-2xl bg-white px-5 py-3" aria-label="AnniePetars home">
           <img :src="logo" alt="AnniePetars" class="h-10 w-auto" />
         </RouterLink>
-        <p class="max-w-sm">
-          Celebrating African heritage through contemporary fashion, distinctive design and
-          individual expression.
-        </p>
+       <div class="max-w-sm">
+  <p>
+    Celebrating African heritage through contemporary fashion, distinctive design and
+    individual expression.
+  </p>
+
+  <div class="mt-4 flex items-start gap-2 text-sm">
+    <i class="fa-solid fa-location-dot mt-1 text-[#e2784a]"></i>
+    <address class="not-italic leading-relaxed">
+      9 Olusegun Street, Ajoke Ayo, Kola, Lagos State, Nigeria.
+    </address>
+  </div>
+</div>
         <div class="flex gap-5 text-xl">
           <a :href="WHATSAPP" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
           <a :href="`mailto:${EMAIL}`" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
