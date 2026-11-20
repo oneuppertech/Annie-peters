@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import ApiService from '@/services/api'
@@ -122,7 +122,140 @@ function onFiles(e) {
   files.value = ok.slice(0, 5)
 }
 
+/* ---------- Success celebration ---------- */
+const root = ref(null)
+const showSuccess = ref(false)
+const requestRef = ref('')
+const confettiCanvas = ref(null)
+const closeBtn = ref(null)
+let confettiRaf = 0
 
+const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// Pages often scroll inside a layout wrapper rather than the window, so handle both
+function scrollParents(el) {
+  const list = []
+  let n = el?.parentElement
+  while (n) {
+    if (/(auto|scroll)/.test(getComputedStyle(n).overflowY) && n.scrollHeight > n.clientHeight) list.push(n)
+    n = n.parentElement
+  }
+  return list
+}
+
+async function scrollToTop() {
+  const behavior = prefersReduced() ? 'auto' : 'smooth'
+  const targets = scrollParents(root.value)
+  window.scrollTo({ top: 0, behavior })
+  targets.forEach((t) => t.scrollTo({ top: 0, behavior }))
+  const atTop = () => window.scrollY < 2 && targets.every((t) => t.scrollTop < 2)
+  const start = performance.now()
+  await new Promise((resolve) => {
+    const tick = () =>
+      atTop() || performance.now() - start > 1500 ? resolve() : requestAnimationFrame(tick)
+    tick()
+  })
+}
+
+async function celebrate(data) {
+  requestRef.value =
+    data?.request_number ?? data?.requestNumber ?? data?.request?.request_number ?? ''
+  await scrollToTop()
+  showSuccess.value = true
+  document.body.style.overflow = 'hidden'
+  window.addEventListener('keydown', onEsc)
+  await nextTick()
+  closeBtn.value?.focus()
+  if (!prefersReduced()) launchConfetti()
+}
+
+function closeSuccess() {
+  showSuccess.value = false
+  document.body.style.overflow = ''
+  window.removeEventListener('keydown', onEsc)
+  stopConfetti()
+}
+const onEsc = (e) => e.key === 'Escape' && closeSuccess()
+
+function stopConfetti() {
+  cancelAnimationFrame(confettiRaf)
+  const c = confettiCanvas.value
+  c?.getContext('2d')?.clearRect(0, 0, c.width, c.height)
+}
+
+function launchConfetti() {
+  const canvas = confettiCanvas.value
+  if (!canvas) return
+  stopConfetti()
+  const ctx = canvas.getContext('2d')
+  const dpr = window.devicePixelRatio || 1
+  const w = (canvas.width = window.innerWidth * dpr)
+  const h = (canvas.height = window.innerHeight * dpr)
+  const colors = ['#F59A6C', '#FFC4A3', '#E2784A', '#FFD9C2', '#C4623A', '#FFE6D6']
+  const parts = []
+
+  const add = (x, y, a, speed) =>
+    parts.push({
+      x, y,
+      vx: Math.cos(a) * speed,
+      vy: Math.sin(a) * speed,
+      w: (6 + Math.random() * 6) * dpr,
+      h: (4 + Math.random() * 5) * dpr,
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.35,
+      color: colors[(Math.random() * colors.length) | 0],
+      round: Math.random() < 0.3,
+      life: 0
+    })
+  const burst = (x, y, a0, a1, n) => {
+    for (let i = 0; i < n; i++) add(x, y, a0 + Math.random() * (a1 - a0), (9 + Math.random() * 10) * dpr)
+  }
+
+  burst(0, h * 0.85, -1.3, -0.6, 60) // from bottom left
+  burst(w, h * 0.85, -2.54, -1.84, 60) // from bottom right
+  burst(w / 2, h * 0.35, 0, Math.PI * 2, 70) // centre pop
+
+  const t0 = performance.now()
+  const frame = (t) => {
+    ctx.clearRect(0, 0, w, h)
+    if (t - t0 < 1200 && Math.random() < 0.5) add(Math.random() * w, -10, Math.PI / 2, 3 * dpr) // light rain
+
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i]
+      p.vy += 0.35 * dpr
+      p.vx *= 0.99
+      p.vy *= 0.99
+      p.x += p.vx
+      p.y += p.vy
+      p.rot += p.vr
+      p.life++
+      if (p.y > h + 40 || p.life > 300) {
+        parts.splice(i, 1)
+        continue
+      }
+      ctx.save()
+      ctx.globalAlpha = Math.min(1, (300 - p.life) / 60)
+      ctx.translate(p.x, p.y)
+      ctx.rotate(p.rot)
+      ctx.fillStyle = p.color
+      if (p.round) {
+        ctx.beginPath()
+        ctx.arc(0, 0, p.h / 1.4, 0, Math.PI * 2)
+        ctx.fill()
+      } else ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h)
+      ctx.restore()
+    }
+    if (parts.length || t - t0 < 1200) confettiRaf = requestAnimationFrame(frame)
+    else ctx.clearRect(0, 0, w, h)
+  }
+  confettiRaf = requestAnimationFrame(frame)
+}
+
+onBeforeUnmount(() => {
+  stopConfetti()
+  document.body.style.overflow = ''
+  window.removeEventListener('keydown', onEsc)
+})
 async function submitCustom() {
   if (!form.name || !form.email || !form.outfit) {
     errorMsg.value = 'Add your name, email and outfit type.'
@@ -164,15 +297,11 @@ async function submitCustom() {
       body.append('files', file)
     }
 
-    // Correct Edge Function endpoint
-    const response = await ApiService.upload(
-      '/custom-requests-submit',
-      body
-    )
-
-    console.log('Custom request submitted:', response.data)
+     const response = await ApiService.upload('/custom-requests-submit', body)
+    const data = response?.data ?? response // works whichever shape ApiService returns
 
     status.value = 'done'
+    celebrate(data)
   } catch (error) {
     console.log('Custom request submission error:', error)
     console.log('Server response:', error)
@@ -437,6 +566,38 @@ async function submitCustom() {
         </div>
       </div>
     </section>
+     <Transition name="celebrate">
+    <div
+      v-if="showSuccess"
+      class="ap-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ap-success-title"
+      @click.self="closeSuccess"
+    >
+      <div class="ap-modal-card">
+        <span
+          class="pop mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#FFC4A3] text-3xl"
+          ><i class="fa-solid fa-check"></i
+        ></span>
+        <h3 id="ap-success-title" class="font-display text-3xl md:text-4xl">Request received</h3>
+        <p class="mx-auto mt-3 max-w-sm text-[#5A413A]">
+          Thank you. Our team will review your design and measurements and contact you to confirm
+          feasibility, price and timing.
+        </p>
+        <p v-if="requestRef" class="mt-4 inline-block rounded-full bg-[#FFE6D6] px-4 py-1 text-sm">
+          Reference <strong>{{ requestRef }}</strong>
+        </p>
+        <div>
+          <button ref="closeBtn" class="btn-peach mt-7 justify-center px-10" @click="closeSuccess">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </Transition>
+
+  <canvas ref="confettiCanvas" class="ap-confetti" aria-hidden="true"></canvas>
   </div>
 </template>
 
@@ -599,5 +760,48 @@ async function submitCustom() {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+/* Success popup + confetti */
+.ap .ap-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2100; /* above Vuetify menus (2000) */
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(42, 27, 22, 0.45);
+  backdrop-filter: blur(3px);
+}
+.ap .ap-modal-card {
+  width: min(460px, 100%);
+  border-radius: 2rem;
+  background: #fff7f1;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 30px 80px -30px rgba(42, 27, 22, 0.5);
+}
+.ap .ap-confetti {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2200;
+}
+.celebrate-enter-active,
+.celebrate-leave-active {
+  transition: opacity 0.3s;
+}
+.celebrate-enter-active .ap-modal-card,
+.celebrate-leave-active .ap-modal-card {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.celebrate-enter-from,
+.celebrate-leave-to {
+  opacity: 0;
+}
+.celebrate-enter-from .ap-modal-card,
+.celebrate-leave-to .ap-modal-card {
+  transform: translateY(28px) scale(0.95);
 }
 </style>
