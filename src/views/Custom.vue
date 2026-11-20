@@ -2,6 +2,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import ApiService from '@/services/api'
 
 onMounted(() => {
   AOS.init({
@@ -14,18 +15,55 @@ onMounted(() => {
 })
 
 const steps = [
-  { icon: 'fa-solid fa-pen-ruler', title: 'Tell us your idea', text: 'Share the outfit, occasion, fabric and the date you need it.' },
-  { icon: 'fa-solid fa-ruler-combined', title: 'Send measurements', text: 'Use the form below. Same unit throughout.' },
-  { icon: 'fa-solid fa-image', title: 'Add references', text: 'Photos or sketches that show the style you want.' },
-  { icon: 'fa-solid fa-handshake', title: 'Agree and confirm', text: 'We confirm design, price, payment terms and timeline before production starts.' }
+  {
+    icon: 'fa-solid fa-pen-ruler',
+    title: 'Tell us your idea',
+    text: 'Share the outfit, occasion, fabric and the date you need it.'
+  },
+  {
+    icon: 'fa-solid fa-ruler-combined',
+    title: 'Send measurements',
+    text: 'Use the form below. Same unit throughout.'
+  },
+  {
+    icon: 'fa-solid fa-image',
+    title: 'Add references',
+    text: 'Photos or sketches that show the style you want.'
+  },
+  {
+    icon: 'fa-solid fa-handshake',
+    title: 'Agree and confirm',
+    text: 'We confirm design, price, payment terms and timeline before production starts.'
+  }
 ]
 
 /* ---------- Measurement form ---------- */
 const unit = ref('cm')
 const garment = ref('dress')
 const fields = {
-  dress: ['Bust', 'Underbust', 'Waist', 'Hips', 'Shoulder width', 'Across back', 'Sleeve length', 'Upper arm', 'Wrist', 'Garment length', 'Height'],
-  trouser: ['Waist', 'Hips', 'Thigh', 'Inside leg', 'Outside leg', 'Knee', 'Ankle / hem', 'Garment length']
+  dress: [
+    'Bust',
+    'Underbust',
+    'Waist',
+    'Hips',
+    'Shoulder width',
+    'Across back',
+    'Sleeve length',
+    'Upper arm',
+    'Wrist',
+    'Garment length',
+    'Height'
+  ],
+  trouser: [
+    'Waist',
+    'Hips',
+    'Thigh',
+    'Inside leg',
+    'Outside leg',
+    'Knee',
+    'Ankle / hem',
+    'Garment length'
+  ]
 }
 const form = reactive({
   name: '',
@@ -55,7 +93,11 @@ today.setHours(0, 0, 0, 0)
 
 const needByLabel = computed(() =>
   needByDate.value
-    ? needByDate.value.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+    ? needByDate.value.toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      })
     : ''
 )
 
@@ -80,29 +122,70 @@ function onFiles(e) {
   files.value = ok.slice(0, 5)
 }
 
+
 async function submitCustom() {
-  if (!form.name || !form.email || !form.outfit)
-    return (errorMsg.value = 'Add your name, email and outfit type.')
-  if (!form.accurate || !form.terms) return (errorMsg.value = 'Please tick both confirmations.')
+  if (!form.name || !form.email || !form.outfit) {
+    errorMsg.value = 'Add your name, email and outfit type.'
+    return
+  }
+
+  if (!form.accurate || !form.terms) {
+    errorMsg.value = 'Please tick both confirmations.'
+    return
+  }
+
   errorMsg.value = ''
   status.value = 'sending'
+
   try {
     const body = new FormData()
-    Object.entries(form).forEach(([k, v]) => body.append(k, v))
+
+    body.append('name', form.name)
+    body.append('email', form.email)
+    body.append('phone', form.phone)
+    body.append('country', form.country)
+    body.append('outfit', form.outfit)
+    body.append('fabric', form.fabric)
+    body.append('colour', form.colour)
+    body.append('needBy', form.needBy)
+    body.append('notes', form.notes)
+
     body.append('unit', unit.value)
     body.append('garment', garment.value)
+
+    // Correct measurement variable
     body.append('measurements', JSON.stringify(measures))
-    files.value.forEach((f) => body.append('files', f))
-    // TODO: replace with your secure endpoint (e.g. Supabase edge function)
-    // const res = await fetch('/api/custom-request', { method: 'POST', body })
-    // if (!res.ok) throw new Error('Upload failed')
-    await new Promise((r) => setTimeout(r, 900))
-    status.value = 'done' // only shown after the server confirms receipt
-  } catch (e) {
+
+    body.append('accurate', String(form.accurate))
+    body.append('terms', String(form.terms))
+
+    // Correct files variable
+    for (const file of files.value) {
+      body.append('files', file)
+    }
+
+    // Correct Edge Function endpoint
+    const response = await ApiService.upload(
+      '/custom-requests-submit',
+      body
+    )
+
+    console.log('Custom request submitted:', response.data)
+
+    status.value = 'done'
+  } catch (error) {
+    console.log('Custom request submission error:', error)
+    console.log('Server response:', error)
+
     status.value = 'error'
-    errorMsg.value = 'We could not send your request. Please try again or email us.'
+
+    errorMsg.value =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      'We could not send your request. Please try again or email us.'
   }
 }
+
 </script>
 
 <template>
@@ -157,11 +240,31 @@ async function submitCustom() {
             <form v-else key="form" class="space-y-10" novalidate @submit.prevent="submitCustom">
               <fieldset class="grid gap-4 md:grid-cols-2">
                 <legend class="mb-4 font-display text-2xl">Tell us about your design</legend>
-                <input v-model="form.name" class="field" placeholder="Full name *" autocomplete="name" />
-                <input v-model="form.email" type="email" class="field" placeholder="Email address *" autocomplete="email" />
-                <input v-model="form.phone" class="field" placeholder="Telephone with country code" autocomplete="tel" />
+                <input
+                  v-model="form.name"
+                  class="field"
+                  placeholder="Full name *"
+                  autocomplete="name"
+                />
+                <input
+                  v-model="form.email"
+                  type="email"
+                  class="field"
+                  placeholder="Email address *"
+                  autocomplete="email"
+                />
+                <input
+                  v-model="form.phone"
+                  class="field"
+                  placeholder="Telephone with country code"
+                  autocomplete="tel"
+                />
                 <input v-model="form.country" class="field" placeholder="Delivery country" />
-                <input v-model="form.outfit" class="field" placeholder="Outfit type or product reference *" />
+                <input
+                  v-model="form.outfit"
+                  class="field"
+                  placeholder="Outfit type or product reference *"
+                />
 
                 <!-- Vuetify date picker -->
                 <v-menu v-model="dateMenu" :close-on-content-click="false" location="bottom start">
@@ -202,11 +305,17 @@ async function submitCustom() {
               </fieldset>
 
               <fieldset>
-                <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div
+                  class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+                >
                   <legend class="font-display text-2xl">Your measurements</legend>
 
                   <div class="flex flex-col gap-3 min-[400px]:flex-row sm:items-center">
-                    <div class="seg flex w-full min-w-0 sm:w-auto" role="group" aria-label="Garment type">
+                    <div
+                      class="seg flex w-full min-w-0 sm:w-auto"
+                      role="group"
+                      aria-label="Garment type"
+                    >
                       <button
                         type="button"
                         class="flex-1 whitespace-nowrap text-center sm:flex-none"
@@ -226,8 +335,22 @@ async function submitCustom() {
                     </div>
 
                     <div class="seg flex w-full sm:w-auto" role="group" aria-label="Unit">
-                      <button type="button" class="flex-1 sm:flex-none" :class="{ on: unit === 'cm' }" @click="unit = 'cm'">cm</button>
-                      <button type="button" class="flex-1 sm:flex-none" :class="{ on: unit === 'in' }" @click="unit = 'in'">in</button>
+                      <button
+                        type="button"
+                        class="flex-1 sm:flex-none"
+                        :class="{ on: unit === 'cm' }"
+                        @click="unit = 'cm'"
+                      >
+                        cm
+                      </button>
+                      <button
+                        type="button"
+                        class="flex-1 sm:flex-none"
+                        :class="{ on: unit === 'in' }"
+                        @click="unit = 'in'"
+                      >
+                        in
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -249,7 +372,10 @@ async function submitCustom() {
                         inputmode="decimal"
                         class="field pr-10"
                       />
-                      <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#9B7A6E]">{{ unit }}</span>
+                      <span
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#9B7A6E]"
+                        >{{ unit }}</span
+                      >
                     </span>
                   </label>
                 </TransitionGroup>
@@ -266,7 +392,13 @@ async function submitCustom() {
                     >Up to 5 files, {{ MAX_MB }}MB each. References guide the design and do not
                     guarantee an exact copy.</span
                   >
-                  <input type="file" class="sr-only" multiple accept="image/*,application/pdf" @change="onFiles" />
+                  <input
+                    type="file"
+                    class="sr-only"
+                    multiple
+                    accept="image/*,application/pdf"
+                    @change="onFiles"
+                  />
                 </label>
                 <ul v-if="files.length" class="mt-4 flex flex-wrap gap-2 text-sm">
                   <li v-for="f in files" :key="f.name" class="rounded-full bg-[#FFE6D6] px-3 py-1">
