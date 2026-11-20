@@ -2,14 +2,7 @@
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import rtwImage from '@/assets/rtw.png'
-import contemporaryImage from '@/assets/contemporary.png'
-import bridalImage from '@/assets/fob.png'
-import asoEbiImage from '@/assets/aso-ebi.png'
-import madeToMeasureImage from '@/assets/mtm.png'
-import standImage from '@/assets/stand.png'
-import girlChildImage from '@/assets/girl-child.png'
-import newDesignImage from '@/assets/new-design.png'
+import { supabase } from '@/services/supabase.js'
 
 /* ---------- Config: swap these for your real paths / URLs ---------- */
 const SHOP_URL = 'https://shop.anniepetars.com' // shop sub-domain app
@@ -35,240 +28,7 @@ onMounted(() => {
 })
 onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
 
-const links = [
-  { label: 'Collections', href: '#collections' },
-  { label: 'Asana Kemuwa', href: '#designer' },
-  { label: 'Custom Outfits', href: '#custom' },
-  { label: 'Press', href: '#press' },
-  { label: 'Contact', href: '#contact' }
-]
 
-/* ---------- NEW: two-column collections with write-ups ---------- */
-const collections = [
-  {
-    id: 'c-rtw', slug: 'ready-to-wear', img: rtwImage,
-    name: 'Annie’s Ready-to-Wear (A-RTW)', line: 'Everyday style, thoughtfully designed.',
-    paras: [
-      'Annie’s Ready-to-Wear collection brings contemporary fashion into everyday life. It is intended for women who appreciate clothing that feels considered, expressive and suitable for a range of settings. Depending on the design, pieces may be styled for daytime activities, social gatherings, work-related occasions or relaxed events.',
-      'The collection focuses on the relationship between comfort, appearance and individual style. Customers should review each product listing for confirmed fabric details, available sizes, colour options, care instructions and current availability.'
-    ],
-    cta: 'Explore Ready-to-Wear'
-  },
-  {
-    id: 'c-suits', slug: 'african-suits', img: contemporaryImage,
-    name: 'Contemporary African Suits', line: 'African heritage meets modern tailoring.',
-    paras: [
-      'The Contemporary African Suits collection explores African-inspired textiles and design details through modern tailoring. The collection is intended for customers who want a polished outfit with character, whether for professional engagements, celebrations, formal gatherings or other occasions where presentation matters.',
-      'Each product listing should explain the garment’s cut, fabric, fastening, fit, available sizes and any styling details relevant to the design. Where a customer requires adjustments, the team can review whether customisation is available for the selected garment.'
-    ],
-    cta: 'Explore Contemporary African Suits'
-  },
-  {
-    id: 'c-bride', slug: 'bridal', img: bridalImage,
-    name: 'Focus on the Bride', line: 'Designed for one of life’s meaningful moments.',
-    paras: [
-      'Focus on the Bride celebrates the personality and preferences of each bride. Bridal style is personal, and the right outfit should reflect the wearer’s vision for the day. This collection explores bridal designs influenced by African fashion, distinctive details and silhouettes suited to different tastes.',
-      'Customers planning a bridal outfit should contact AnniePetars early to discuss the design concept, event date, measurements, fabric preferences, fitting requirements and production schedule. A request is not confirmed until the design, price and timeline have been agreed in writing.'
-    ],
-    cta: 'Discuss a Bridal Design', href: '#custom'
-  },
-  {
-    id: 'c-aso', slug: 'aso-ebi', img: asoEbiImage,
-    name: 'Aso Ebi Special', line: 'Together in style, united by tradition.',
-    paras: [
-      'Aso Ebi is associated with family, friendship, community and shared celebration. The Aso Ebi Special collection brings a contemporary design perspective to coordinated dressing for weddings, birthdays, anniversaries and other memorable gatherings.',
-      'For group enquiries, please provide the event date, number of outfits, preferred fabric or colour direction, approximate size range and delivery location. Availability, minimum quantities, fabric sourcing, pricing and production timing should be confirmed directly with the team before a group order is finalised.'
-    ],
-    cta: 'Enquire About Aso Ebi', href: '#contact'
-  },
-  {
-    id: 'c-mtm', slug: 'made-to-measure', img: madeToMeasureImage,
-    name: 'Made-to-Measure Designs', line: 'Your measurements. Your preferences. Your design.',
-    paras: [
-      'The Made-to-Measure service offers customers the opportunity to discuss a garment shaped around their measurements and personal preferences. The process begins with understanding the outfit, occasion, desired fit, design details and expected delivery date.',
-      'Customers may submit measurements and reference images through the measurement request form. AnniePetars will review the submission and contact the customer if additional details or clarification are needed. The team will confirm feasibility, fabric availability, quotation, payment terms and estimated production time before accepting the order.'
-    ],
-    cta: 'Submit Your Measurements', href: '#custom'
-  },
-  {
-    id: 'c-stand', slug: 'stand-official-001', img: standImage,
-    name: 'Stand Official 001', line: 'A distinctive expression of presence and purpose.',
-    paras: [
-      'Stand Official 001 explores polished dressing for formal engagements, professional occasions and events where presentation matters. The collection is for people who value a considered appearance while retaining a sense of personal identity.',
-      'Product information should describe the cut, intended use, fit, fabric, available sizes and styling details for each garment. Any tailoring or customisation options should be stated clearly.'
-    ],
-    cta: 'Explore Stand Official 001'
-  },
-  {
-    id: 'c-girl', slug: 'girl-child', img: girlChildImage,
-    name: 'The Girl Child Love', line: 'Celebrating young girls through fashion, care and creativity.',
-    paras: [
-      'The Girl Child Love collection recognises the individuality, confidence and potential of young girls. It focuses on age-appropriate clothing and thoughtful styling that allows young wearers to feel comfortable and express their personality.',
-      'The collection also reflects the brand’s interest in positive representation and the importance of recognising young girls as individuals with their own interests, preferences and aspirations. Product pages should clearly state age or size guidance, garment measurements, fabric information and care instructions.'
-    ],
-    cta: 'Explore The Girl Child Love'
-  },
-  {
-    id: 'c-new', slug: 'new-arrivals', img: newDesignImage,
-    name: 'New Designs, New Arrivals', line: 'Fresh additions. Individual style.',
-    paras: [
-      'This section features new designs and recent additions to the AnniePetars range. Each arrival should be accompanied by clear product photography, a description of the design, available sizes and colours, price, fabric composition, care instructions and an estimated dispatch or production timeframe.',
-      'Availability can change. Customers should contact the team if they need confirmation before placing an order.'
-    ],
-    cta: 'View New Arrivals'
-  }
-]
-const collectionHref = (c) => c.href || `${SHOP_URL}/collections/${c.slug}`
-
-/* ---------- NEW: press article thumbnail ---------- */
-const article = {
-  url: 'https://pmnewsnigeria.com/2024/02/22/african-fashion-finds-a-modern-voice-through-anniepetars-the-brand-founded-by-asana-peterson/',
-  // Better: download this image into /src/assets and import it instead of hotlinking
-  img: 'https://cdn.pmnewsnigeria.com/wp-content/uploads/2026/10/Annie-Peterson.jpg',
-  source: 'P.M. News',
-  title: 'African fashion finds a modern voice through AnniePetars, the brand founded by Asana Peterson',
-  author: 'Michael Adesina',
-  date: '22nd February, 2024'
-}
-
-/* ---------- NEW: full designer write-up ---------- */
-const designerParas = [
-  'Fashion provides a means of expressing identity, culture and individuality. For Asana Kemuwa, a BSc graduate in Sociology, this perspective shapes the creative vision behind AnniePetars. Inspired by African fashion and its rich cultural heritage, her work explores the relationship between tradition and contemporary style through distinctive prints, carefully considered cuts and expressive silhouettes. Her designs reflect an appreciation for cultural identity while embracing modern aesthetics and the individuality of the people who wear them.',
-  'As the founder and creative designer of AnniePetars, Asana leads a brand shaped by the relationship between heritage and modern dress. She is interested in the ways colour, fabric, pattern and construction influence how a garment is experienced. Her approach recognises that clothing serves different purposes: it can express personal taste, mark a celebration, support professional presentation or help someone feel connected to their cultural identity.',
-  'Over more than five years, AnniePetars has developed its creative identity and reached customers in Nigeria, the United Kingdom, the United States and Ghana. This experience forms part of the brand’s continuing development and its ambition to engage with a wider international fashion community.',
-  'For Asana, contemporary African fashion is not limited to one type of occasion or one interpretation of tradition. African-inspired design can be part of everyday wardrobes, professional dressing, celebrations, bridal styling and personal creative expression. Through AnniePetars, she aims to present designs that respect their inspiration while responding to the preferences of modern customers.',
-  'Her creative direction is guided by individuality, attention to detail and the understanding that a garment is ultimately worn by a person with their own identity and expectations. The brand’s collections therefore explore different forms of expression, from ready-to-wear pieces to occasion wear and selected made-to-measure designs.',
-  'As AnniePetars continues to grow, Asana aims to strengthen the brand’s visibility through new collections, thoughtful collaborations, media opportunities and participation in fashion events. Her long-term vision is to build a recognised brand associated with contemporary African design, original creative expression and international engagement.'
-]
-const visionList = [
-  'Explore African-inspired patterns, fabrics, colours and visual influences with respect for their cultural context.',
-  'Develop distinctive silhouettes and contemporary interpretations of African clothing.',
-  'Create designs that support individual style and personal expression.',
-  'Build relationships with customers, retailers, media professionals and creative partners.',
-  'Expand the brand’s international visibility through collections, collaborations and professional opportunities.',
-  'Present the brand’s work and milestones accurately, with clear supporting information.'
-]
-const designerPhilosophy = [
-  { title: 'Identity is part of the design', text: 'Our starting point is an appreciation for the cultural influences, stories and visual language associated with African fashion. These influences inform the creative process without requiring every garment to follow the same style or occasion.' },
-  { title: 'Heritage and contemporary style can coexist', text: 'We explore ways to interpret African-inspired details through modern cuts, proportions and styling. This allows the brand to engage with contemporary wardrobes while maintaining a visible connection to its creative inspiration.' },
-  { title: 'Personal style deserves room', text: 'Customers have different preferences, body shapes, occasions and expectations. We aim to explain each design clearly and offer selected personalisation options where production requirements allow.' },
-  { title: 'Fit and communication matter', text: 'For made-to-measure requests, clear communication is essential. Customers should provide accurate measurements and design details, while AnniePetars should confirm the agreed specification, price and production schedule before work begins.' },
-  { title: 'Creative growth is collaborative', text: 'Fashion develops through conversations between designers, customers, makers, photographers, stylists, retailers, publications and other creative professionals. We welcome proposals that align with the brand’s direction and values.' }
-]
-
-const values = [
-  {
-    icon: 'fa-solid fa-feather-pointed',
-    title: 'Identity is part of the design',
-    text: 'Every piece starts with respect for the colour, pattern and form found in African fashion.'
-  },
-  {
-    icon: 'fa-solid fa-scissors',
-    title: 'Heritage meets contemporary',
-    text: 'African-inspired details, cut into modern proportions you can wear.'
-  },
-  {
-    icon: 'fa-solid fa-user-check',
-    title: 'Personal style has room',
-    text: 'Selected designs can be adjusted to your fit, taste and occasion.'
-  }
-]
-
-const steps = [
-  {
-    icon: 'fa-solid fa-pen-ruler',
-    title: 'Tell us your idea',
-    text: 'Share the outfit, occasion, fabric and the date you need it.'
-  },
-  {
-    icon: 'fa-solid fa-ruler-combined',
-    title: 'Send measurements',
-    text: 'Use the form below. Same unit throughout.'
-  },
-  {
-    icon: 'fa-solid fa-image',
-    title: 'Add references',
-    text: 'Photos or sketches that show the style you want.'
-  },
-  {
-    icon: 'fa-solid fa-handshake',
-    title: 'Agree and confirm',
-    text: 'We confirm design, price, payment terms and timeline before production starts.'
-  }
-]
-
-const pressItems = [
-  {
-    icon: 'fa-solid fa-newspaper',
-    title: 'Press features',
-    text: 'Verified coverage and interviews, linked to original sources.'
-  },
-  {
-    icon: 'fa-solid fa-award',
-    title: 'Awards',
-    text: 'Confirmed awards and nominations, listed accurately.'
-  },
-  {
-    icon: 'fa-solid fa-camera-retro',
-    title: 'Exhibitions',
-    text: 'Fashion presentations and showcases with event details.'
-  },
-  {
-    icon: 'fa-solid fa-people-arrows',
-    title: 'Collaborations',
-    text: 'Photographers, stylists, retailers and cultural organisations.'
-  }
-]
-
-const marquee = [
-  'Prints',
-  'Silhouettes',
-  'Aso Ebi',
-  'Bridal',
-  'Tailoring',
-  'Made-to-Measure',
-  'Ready-to-Wear',
-  'Heritage'
-]
-
-/* ---------- trust bar, best sellers, lookbook, testimonials, FAQ ---------- */
-const trust = [
-  { icon: 'fa-solid fa-truck-fast', title: 'Worldwide delivery', text: 'Nigeria, UK, USA, Ghana and beyond.' },
-  { icon: 'fa-solid fa-ruler-combined', title: 'Made-to-measure', text: 'Fitted to your measurements.' },
-  { icon: 'fa-solid fa-rotate-left', title: 'Easy returns', text: 'On eligible ready-to-wear pieces.' },
-  { icon: 'fa-solid fa-lock', title: 'Secure checkout', text: 'Protected payments on our shop.' }
-]
-
-// Replace names, prices and slugs with real products
-const bestSellers = [
-  { name: 'Signature Print Dress', price: '₦85,000', img: rtwImage, slug: 'signature-print-dress' },
-  { name: 'Contemporary Agbada Set', price: '₦150,000', img: contemporaryImage, slug: 'agbada-set' },
-  { name: 'Bridal Corset Gown', price: '₦320,000', img: bridalImage, slug: 'bridal-corset-gown' },
-  { name: 'Aso Ebi Two-Piece', price: '₦70,000', img: asoEbiImage, slug: 'aso-ebi-two-piece' }
-]
-
-const lookbook = [
-  { img: newDesignImage, alt: 'New design', cls: 'row-span-2' },
-  { img: standImage, alt: 'Stand Official 001', cls: '' },
-  { img: girlChildImage, alt: 'The Girl Child Love', cls: '' },
-  { img: madeToMeasureImage, alt: 'Made-to-measure outfit', cls: 'col-span-2' }
-]
-
-// Placeholders: replace with real, permissioned customer quotes only
-const testimonials = [
-  { quote: 'Replace with a real customer quote.', name: 'Customer name', place: 'Lagos, Nigeria' },
-  { quote: 'Replace with a real customer quote.', name: 'Customer name', place: 'London, UK' },
-  { quote: 'Replace with a real customer quote.', name: 'Customer name', place: 'Accra, Ghana' }
-]
-
-const faqs = [
-  { q: 'How long does a custom outfit take?', a: 'Timelines are confirmed with you before production starts and depend on the design and fabric.' },
-  { q: 'Do you ship internationally?', a: 'Yes. We deliver to Nigeria, the UK, the USA, Ghana and other destinations. See Delivery and Shipping for details.' },
-  { q: 'Can I return a made-to-measure piece?', a: 'Custom pieces are made for you, so please see our Customisation Terms and Returns and Refunds policy.' },
-  { q: 'How do I take my measurements?', a: 'Use a flexible tape, keep it snug but not tight, and use the same unit throughout. The custom form above guides you.' },
-  { q: 'Can you match a reference photo?', a: 'References guide the design but do not guarantee an exact copy. We confirm feasibility first.' }
-]
-const openFaq = ref(null)
 
 /* ---------- Measurement form (stays on page) ---------- */
 const unit = ref('cm')
@@ -316,50 +76,73 @@ const files = ref([])
 const status = ref('idle') // idle | sending | done | error
 const errorMsg = ref('')
 const MAX_MB = 8
-const currentFields = computed(() => fields[garment.value])
-
-function onFiles(e) {
-  const picked = Array.from(e.target.files || [])
-  const ok = picked.filter((f) => f.type.startsWith('image/') || f.type === 'application/pdf')
-  if (ok.some((f) => f.size > MAX_MB * 1024 * 1024)) {
-    errorMsg.value = `Each file must be under ${MAX_MB}MB.`
-    return
-  }
-  errorMsg.value = ''
-  files.value = ok.slice(0, 5)
-}
-
-async function submitCustom() {
-  if (!form.name || !form.email || !form.outfit)
-    return (errorMsg.value = 'Add your name, email and outfit type.')
-  if (!form.accurate || !form.terms) return (errorMsg.value = 'Please tick both confirmations.')
-  errorMsg.value = ''
-  status.value = 'sending'
-  try {
-    const body = new FormData()
-    Object.entries(form).forEach(([k, v]) => body.append(k, v))
-    body.append('unit', unit.value)
-    body.append('garment', garment.value)
-    body.append('measurements', JSON.stringify(measures))
-    files.value.forEach((f) => body.append('files', f))
-    // TODO: replace with your secure endpoint (e.g. Supabase edge function)
-    // const res = await fetch('/api/custom-request', { method: 'POST', body })
-    // if (!res.ok) throw new Error('Upload failed')
-    await new Promise((r) => setTimeout(r, 900))
-    status.value = 'done' // only shown after the server confirms receipt
-  } catch (e) {
-    status.value = 'error'
-    errorMsg.value = 'We could not send your request. Please try again or email us.'
-  }
-}
 
 /* ---------- Contact / newsletter ---------- */
-const contact = reactive({ name: '', email: '', type: 'General enquiry', message: '' })
+/* ---------- Contact form ---------- */
+
+const contact = reactive({
+  name: '',
+  email: '',
+  type: 'General enquiry',
+  message: ''
+})
+
 const contactSent = ref(false)
-const sendContact = () => {
-  if (!contact.name || !contact.email || !contact.message) return
-  // TODO: wire to backend
-  contactSent.value = true
+const contactSending = ref(false)
+const contactError = ref('')
+
+async function sendContact() {
+  contactError.value = ''
+
+  if (
+    !contact.name.trim() ||
+    !contact.email.trim() ||
+    !contact.message.trim()
+  ) {
+    contactError.value = 'Please complete all required fields.'
+    return
+  }
+
+  contactSending.value = true
+
+  try {
+    const { data, error } = await supabase.functions.invoke(
+      'contact-messages',
+      {
+        body: {
+          name: contact.name.trim(),
+          email: contact.email.trim(),
+          enquiry_type: contact.type,
+          message: contact.message.trim()
+        }
+      }
+    )
+
+    if (error) {
+      throw new Error(error.message || 'Unable to submit your enquiry.')
+    }
+
+    if (!data?.success) {
+      throw new Error(data?.message || 'Unable to submit your enquiry.')
+    }
+
+    contactSent.value = true
+
+    Object.assign(contact, {
+      name: '',
+      email: '',
+      type: 'General enquiry',
+      message: ''
+    })
+
+  } catch (error) {
+    console.error('Contact submission error:', error)
+
+    contactError.value =
+      error.message || 'Something went wrong. Please try again.'
+  } finally {
+    contactSending.value = false
+  }
 }
 const news = reactive({ email: '', done: false })
 const joinNews = () => {
@@ -406,49 +189,115 @@ const joinNews = () => {
             </li>
           </ul>
         </div>
-        <form
-          class="space-y-4 rounded-[2rem] bg-[#3A251E] p-8"
-          data-aos="fade-left"
-          @submit.prevent="sendContact"
-        >
-          <template v-if="!contactSent">
-            <input v-model="contact.name" class="field-dark" placeholder="Full name" />
-            <input
-              v-model="contact.email"
-              type="email"
-              class="field-dark"
-              placeholder="Email address"
-            />
-            <select v-model="contact.type" class="field-dark" aria-label="Enquiry type">
-              <option
-                v-for="t in [
-                  'General enquiry',
-                  'Customer service',
-                  'Custom outfit',
-                  'Press / media',
-                  'Sponsorship',
-                  'Partnership',
-                  'Retail',
-                  'Event / exhibition'
-                ]"
-                :key="t"
-              >
-                {{ t }}
-              </option>
-            </select>
-            <textarea
-              v-model="contact.message"
-              rows="4"
-              class="field-dark"
-              placeholder="Your message and any relevant dates"
-            ></textarea>
-            <button class="btn-peach w-full justify-center">Send your enquiry</button>
-          </template>
-          <p v-else class="py-10 text-center text-lg">
-            <i class="fa-solid fa-circle-check mr-2 text-[#FFC4A3]"></i>Thank you. We will be in
-            touch.
-          </p>
-        </form>
+       
+<form
+  class="space-y-4 rounded-[2rem] bg-[#3A251E] p-8"
+  data-aos="fade-left"
+  @submit.prevent="sendContact"
+>
+  <template v-if="!contactSent">
+
+    <input
+      v-model="contact.name"
+      type="text"
+      class="field-dark"
+      placeholder="Full name"
+      autocomplete="name"
+      maxlength="120"
+      required
+    />
+
+    <input
+      v-model="contact.email"
+      type="email"
+      class="field-dark"
+      placeholder="Email address"
+      autocomplete="email"
+      maxlength="254"
+      required
+    />
+
+   <el-select
+  v-model="contact.type"
+  placeholder="Select enquiry type"
+  class="contact-select w-full"
+  size="large"
+  popper-class="contact-select-dropdown"
+>
+  <el-option
+    v-for="type in [
+      'General enquiry',
+      'Customer service',
+      'Custom outfit',
+      'Press / media',
+      'Sponsorship',
+      'Partnership',
+      'Retail',
+      'Event / exhibition'
+    ]"
+    :key="type"
+    :label="type"
+    :value="type"
+  />
+</el-select>
+
+    <textarea
+      v-model="contact.message"
+      rows="5"
+      class="field-dark"
+      placeholder="Your message and any relevant dates"
+      maxlength="5000"
+      required
+    ></textarea>
+
+    <p
+      v-if="contactError"
+      class="rounded-xl border border-red-400/30 bg-red-400/10 p-3 text-sm text-red-200"
+      role="alert"
+    >
+      {{ contactError }}
+    </p>
+
+    <button
+      type="submit"
+      class="btn-peach w-full justify-center"
+      :disabled="contactSending"
+    >
+      <i
+        v-if="contactSending"
+        class="fa-solid fa-spinner fa-spin mr-2"
+      ></i>
+
+      {{ contactSending ? 'Sending enquiry...' : 'Send your enquiry' }}
+    </button>
+
+  </template>
+
+  <div
+    v-else
+    class="py-10 text-center"
+    role="status"
+  >
+    <i class="fa-solid fa-circle-check mb-4 text-4xl text-[#FFC4A3]"></i>
+
+    <h3 class="font-display text-3xl">
+      Thank you!
+    </h3>
+
+    <p class="mt-3 text-[#FFD9C2]">
+      Your enquiry has been received. Our team will be in touch.
+    </p>
+
+    <button
+      type="button"
+      class="btn-peach mt-6"
+      @click="contactSent = false; contactError = ''"
+    >
+      Send another message
+    </button>
+  </div>
+</form>
+
       </div>
     </section>
 </template>
@@ -735,5 +584,49 @@ const joinNews = () => {
     opacity: 1;
     transform: none;
   }
+}
+/* Element Plus contact select */
+.ap .contact-select {
+  width: 100%;
+}
+
+.ap .contact-select .el-select__wrapper {
+  min-height: 52px;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: #2a1b16;
+  box-shadow: 0 0 0 1.5px rgba(255, 196, 163, 0.2) inset;
+}
+
+.ap .contact-select .el-select__placeholder,
+.ap .contact-select .el-select__selected-item {
+  color: #fff7f1;
+}
+
+.ap .contact-select .el-select__placeholder {
+  color: rgba(255, 247, 241, 0.65);
+}
+
+.ap .contact-select .el-select__wrapper.is-focused {
+  box-shadow: 0 0 0 1.5px #ffc4a3 inset;
+}
+
+.ap .contact-select .el-select__caret {
+  color: #ffc4a3;
+}
+
+.contact-select-dropdown {
+  border-radius: 12px !important;
+}
+
+.contact-select-dropdown .el-select-dropdown__item {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.contact-select-dropdown .el-select-dropdown__item.is-selected {
+  color: #b85d35;
+  font-weight: 600;
 }
 </style>
