@@ -9,7 +9,7 @@ import ContactPage from '@/views/ContactPage.vue'
 import PrivacyPolicy from '@/views/PrivacyPolicy.vue'
 import CookiePolicy from '@/views/CookiePolicy.vue'
 import Terms from '@/views/Terms.vue'
-
+import Conversation from '@/views/Conversation.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,7 +40,7 @@ const router = createRouter({
       name: 'asana-kemuwa',
       component: Asana
     },
-    
+
     {
       path: '/press',
       name: 'press',
@@ -52,6 +52,17 @@ const router = createRouter({
       component: ContactPage
     },
     { path: '/privacy-policy', name: 'privacy-policy', component: PrivacyPolicy },
+    { path: '/cookie-policy', name: 'cookie-policy', component: CookiePolicy },
+    { path: '/terms', name: 'terms', component: Terms },
+    {
+  path: '/conversation/:token',
+  name: 'PublicConversation',
+  component: Conversation,
+  meta: {
+    requiresAuth: false,
+    public: true
+  }
+}
 { path: '/cookie-policy', name: 'cookie-policy', component: CookiePolicy },
 { path: '/terms', name: 'terms', component: Terms },
 {

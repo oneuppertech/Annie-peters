@@ -1,7 +1,8 @@
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import ApiService from '@/services/api'
 
 onMounted(() => {
   AOS.init({
@@ -14,18 +15,55 @@ onMounted(() => {
 })
 
 const steps = [
-  { icon: 'fa-solid fa-pen-ruler', title: 'Tell us your idea', text: 'Share the outfit, occasion, fabric and the date you need it.' },
-  { icon: 'fa-solid fa-ruler-combined', title: 'Send measurements', text: 'Use the form below. Same unit throughout.' },
-  { icon: 'fa-solid fa-image', title: 'Add references', text: 'Photos or sketches that show the style you want.' },
-  { icon: 'fa-solid fa-handshake', title: 'Agree and confirm', text: 'We confirm design, price, payment terms and timeline before production starts.' }
+  {
+    icon: 'fa-solid fa-pen-ruler',
+    title: 'Tell us your idea',
+    text: 'Share the outfit, occasion, fabric and the date you need it.'
+  },
+  {
+    icon: 'fa-solid fa-ruler-combined',
+    title: 'Send measurements',
+    text: 'Use the form below. Same unit throughout.'
+  },
+  {
+    icon: 'fa-solid fa-image',
+    title: 'Add references',
+    text: 'Photos or sketches that show the style you want.'
+  },
+  {
+    icon: 'fa-solid fa-handshake',
+    title: 'Agree and confirm',
+    text: 'We confirm design, price, payment terms and timeline before production starts.'
+  }
 ]
 
 /* ---------- Measurement form ---------- */
 const unit = ref('cm')
 const garment = ref('dress')
 const fields = {
-  dress: ['Bust', 'Underbust', 'Waist', 'Hips', 'Shoulder width', 'Across back', 'Sleeve length', 'Upper arm', 'Wrist', 'Garment length', 'Height'],
-  trouser: ['Waist', 'Hips', 'Thigh', 'Inside leg', 'Outside leg', 'Knee', 'Ankle / hem', 'Garment length']
+  dress: [
+    'Bust',
+    'Underbust',
+    'Waist',
+    'Hips',
+    'Shoulder width',
+    'Across back',
+    'Sleeve length',
+    'Upper arm',
+    'Wrist',
+    'Garment length',
+    'Height'
+  ],
+  trouser: [
+    'Waist',
+    'Hips',
+    'Thigh',
+    'Inside leg',
+    'Outside leg',
+    'Knee',
+    'Ankle / hem',
+    'Garment length'
+  ]
 }
 const form = reactive({
   name: '',
@@ -55,7 +93,11 @@ today.setHours(0, 0, 0, 0)
 
 const needByLabel = computed(() =>
   needByDate.value
-    ? needByDate.value.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+    ? needByDate.value.toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      })
     : ''
 )
 
@@ -80,29 +122,199 @@ function onFiles(e) {
   files.value = ok.slice(0, 5)
 }
 
+/* ---------- Success celebration ---------- */
+const root = ref(null)
+const showSuccess = ref(false)
+const requestRef = ref('')
+const confettiCanvas = ref(null)
+const closeBtn = ref(null)
+let confettiRaf = 0
+
+const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// Pages often scroll inside a layout wrapper rather than the window, so handle both
+function scrollParents(el) {
+  const list = []
+  let n = el?.parentElement
+  while (n) {
+    if (/(auto|scroll)/.test(getComputedStyle(n).overflowY) && n.scrollHeight > n.clientHeight) list.push(n)
+    n = n.parentElement
+  }
+  return list
+}
+
+async function scrollToTop() {
+  const behavior = prefersReduced() ? 'auto' : 'smooth'
+  const targets = scrollParents(root.value)
+  window.scrollTo({ top: 0, behavior })
+  targets.forEach((t) => t.scrollTo({ top: 0, behavior }))
+  const atTop = () => window.scrollY < 2 && targets.every((t) => t.scrollTop < 2)
+  const start = performance.now()
+  await new Promise((resolve) => {
+    const tick = () =>
+      atTop() || performance.now() - start > 1500 ? resolve() : requestAnimationFrame(tick)
+    tick()
+  })
+}
+
+async function celebrate(data) {
+  requestRef.value =
+    data?.request_number ?? data?.requestNumber ?? data?.request?.request_number ?? ''
+  await scrollToTop()
+  showSuccess.value = true
+  document.body.style.overflow = 'hidden'
+  window.addEventListener('keydown', onEsc)
+  await nextTick()
+  closeBtn.value?.focus()
+  if (!prefersReduced()) launchConfetti()
+}
+
+function closeSuccess() {
+  showSuccess.value = false
+  document.body.style.overflow = ''
+  window.removeEventListener('keydown', onEsc)
+  stopConfetti()
+}
+const onEsc = (e) => e.key === 'Escape' && closeSuccess()
+
+function stopConfetti() {
+  cancelAnimationFrame(confettiRaf)
+  const c = confettiCanvas.value
+  c?.getContext('2d')?.clearRect(0, 0, c.width, c.height)
+}
+
+function launchConfetti() {
+  const canvas = confettiCanvas.value
+  if (!canvas) return
+  stopConfetti()
+  const ctx = canvas.getContext('2d')
+  const dpr = window.devicePixelRatio || 1
+  const w = (canvas.width = window.innerWidth * dpr)
+  const h = (canvas.height = window.innerHeight * dpr)
+  const colors = ['#F59A6C', '#FFC4A3', '#E2784A', '#FFD9C2', '#C4623A', '#FFE6D6']
+  const parts = []
+
+  const add = (x, y, a, speed) =>
+    parts.push({
+      x, y,
+      vx: Math.cos(a) * speed,
+      vy: Math.sin(a) * speed,
+      w: (6 + Math.random() * 6) * dpr,
+      h: (4 + Math.random() * 5) * dpr,
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.35,
+      color: colors[(Math.random() * colors.length) | 0],
+      round: Math.random() < 0.3,
+      life: 0
+    })
+  const burst = (x, y, a0, a1, n) => {
+    for (let i = 0; i < n; i++) add(x, y, a0 + Math.random() * (a1 - a0), (9 + Math.random() * 10) * dpr)
+  }
+
+  burst(0, h * 0.85, -1.3, -0.6, 60) // from bottom left
+  burst(w, h * 0.85, -2.54, -1.84, 60) // from bottom right
+  burst(w / 2, h * 0.35, 0, Math.PI * 2, 70) // centre pop
+
+  const t0 = performance.now()
+  const frame = (t) => {
+    ctx.clearRect(0, 0, w, h)
+    if (t - t0 < 1200 && Math.random() < 0.5) add(Math.random() * w, -10, Math.PI / 2, 3 * dpr) // light rain
+
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i]
+      p.vy += 0.35 * dpr
+      p.vx *= 0.99
+      p.vy *= 0.99
+      p.x += p.vx
+      p.y += p.vy
+      p.rot += p.vr
+      p.life++
+      if (p.y > h + 40 || p.life > 300) {
+        parts.splice(i, 1)
+        continue
+      }
+      ctx.save()
+      ctx.globalAlpha = Math.min(1, (300 - p.life) / 60)
+      ctx.translate(p.x, p.y)
+      ctx.rotate(p.rot)
+      ctx.fillStyle = p.color
+      if (p.round) {
+        ctx.beginPath()
+        ctx.arc(0, 0, p.h / 1.4, 0, Math.PI * 2)
+        ctx.fill()
+      } else ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h)
+      ctx.restore()
+    }
+    if (parts.length || t - t0 < 1200) confettiRaf = requestAnimationFrame(frame)
+    else ctx.clearRect(0, 0, w, h)
+  }
+  confettiRaf = requestAnimationFrame(frame)
+}
+
+onBeforeUnmount(() => {
+  stopConfetti()
+  document.body.style.overflow = ''
+  window.removeEventListener('keydown', onEsc)
+})
 async function submitCustom() {
-  if (!form.name || !form.email || !form.outfit)
-    return (errorMsg.value = 'Add your name, email and outfit type.')
-  if (!form.accurate || !form.terms) return (errorMsg.value = 'Please tick both confirmations.')
+  if (!form.name || !form.email || !form.outfit) {
+    errorMsg.value = 'Add your name, email and outfit type.'
+    return
+  }
+
+  if (!form.accurate || !form.terms) {
+    errorMsg.value = 'Please tick both confirmations.'
+    return
+  }
+
   errorMsg.value = ''
   status.value = 'sending'
+
   try {
     const body = new FormData()
-    Object.entries(form).forEach(([k, v]) => body.append(k, v))
+
+    body.append('name', form.name)
+    body.append('email', form.email)
+    body.append('phone', form.phone)
+    body.append('country', form.country)
+    body.append('outfit', form.outfit)
+    body.append('fabric', form.fabric)
+    body.append('colour', form.colour)
+    body.append('needBy', form.needBy)
+    body.append('notes', form.notes)
+
     body.append('unit', unit.value)
     body.append('garment', garment.value)
+
+    // Correct measurement variable
     body.append('measurements', JSON.stringify(measures))
-    files.value.forEach((f) => body.append('files', f))
-    // TODO: replace with your secure endpoint (e.g. Supabase edge function)
-    // const res = await fetch('/api/custom-request', { method: 'POST', body })
-    // if (!res.ok) throw new Error('Upload failed')
-    await new Promise((r) => setTimeout(r, 900))
-    status.value = 'done' // only shown after the server confirms receipt
-  } catch (e) {
+
+    body.append('accurate', String(form.accurate))
+    body.append('terms', String(form.terms))
+
+    // Correct files variable
+    for (const file of files.value) {
+      body.append('files', file)
+    }
+
+     const response = await ApiService.upload('/custom-requests-submit', body)
+    const data = response?.data ?? response // works whichever shape ApiService returns
+
+    status.value = 'done'
+    celebrate(data)
+  } catch (error) {
+    console.log('Custom request submission error:', error)
+    console.log('Server response:', error)
+
     status.value = 'error'
-    errorMsg.value = 'We could not send your request. Please try again or email us.'
+
+    errorMsg.value =
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      'We could not send your request. Please try again or email us.'
   }
 }
+
 </script>
 
 <template>
@@ -157,11 +369,31 @@ async function submitCustom() {
             <form v-else key="form" class="space-y-10" novalidate @submit.prevent="submitCustom">
               <fieldset class="grid gap-4 md:grid-cols-2">
                 <legend class="mb-4 font-display text-2xl">Tell us about your design</legend>
-                <input v-model="form.name" class="field" placeholder="Full name *" autocomplete="name" />
-                <input v-model="form.email" type="email" class="field" placeholder="Email address *" autocomplete="email" />
-                <input v-model="form.phone" class="field" placeholder="Telephone with country code" autocomplete="tel" />
+                <input
+                  v-model="form.name"
+                  class="field"
+                  placeholder="Full name *"
+                  autocomplete="name"
+                />
+                <input
+                  v-model="form.email"
+                  type="email"
+                  class="field"
+                  placeholder="Email address *"
+                  autocomplete="email"
+                />
+                <input
+                  v-model="form.phone"
+                  class="field"
+                  placeholder="Telephone with country code"
+                  autocomplete="tel"
+                />
                 <input v-model="form.country" class="field" placeholder="Delivery country" />
-                <input v-model="form.outfit" class="field" placeholder="Outfit type or product reference *" />
+                <input
+                  v-model="form.outfit"
+                  class="field"
+                  placeholder="Outfit type or product reference *"
+                />
 
                 <!-- Vuetify date picker -->
                 <v-menu v-model="dateMenu" :close-on-content-click="false" location="bottom start">
@@ -202,11 +434,17 @@ async function submitCustom() {
               </fieldset>
 
               <fieldset>
-                <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div
+                  class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+                >
                   <legend class="font-display text-2xl">Your measurements</legend>
 
                   <div class="flex flex-col gap-3 min-[400px]:flex-row sm:items-center">
-                    <div class="seg flex w-full min-w-0 sm:w-auto" role="group" aria-label="Garment type">
+                    <div
+                      class="seg flex w-full min-w-0 sm:w-auto"
+                      role="group"
+                      aria-label="Garment type"
+                    >
                       <button
                         type="button"
                         class="flex-1 whitespace-nowrap text-center sm:flex-none"
@@ -226,8 +464,22 @@ async function submitCustom() {
                     </div>
 
                     <div class="seg flex w-full sm:w-auto" role="group" aria-label="Unit">
-                      <button type="button" class="flex-1 sm:flex-none" :class="{ on: unit === 'cm' }" @click="unit = 'cm'">cm</button>
-                      <button type="button" class="flex-1 sm:flex-none" :class="{ on: unit === 'in' }" @click="unit = 'in'">in</button>
+                      <button
+                        type="button"
+                        class="flex-1 sm:flex-none"
+                        :class="{ on: unit === 'cm' }"
+                        @click="unit = 'cm'"
+                      >
+                        cm
+                      </button>
+                      <button
+                        type="button"
+                        class="flex-1 sm:flex-none"
+                        :class="{ on: unit === 'in' }"
+                        @click="unit = 'in'"
+                      >
+                        in
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -249,7 +501,10 @@ async function submitCustom() {
                         inputmode="decimal"
                         class="field pr-10"
                       />
-                      <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#9B7A6E]">{{ unit }}</span>
+                      <span
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#9B7A6E]"
+                        >{{ unit }}</span
+                      >
                     </span>
                   </label>
                 </TransitionGroup>
@@ -266,7 +521,13 @@ async function submitCustom() {
                     >Up to 5 files, {{ MAX_MB }}MB each. References guide the design and do not
                     guarantee an exact copy.</span
                   >
-                  <input type="file" class="sr-only" multiple accept="image/*,application/pdf" @change="onFiles" />
+                  <input
+                    type="file"
+                    class="sr-only"
+                    multiple
+                    accept="image/*,application/pdf"
+                    @change="onFiles"
+                  />
                 </label>
                 <ul v-if="files.length" class="mt-4 flex flex-wrap gap-2 text-sm">
                   <li v-for="f in files" :key="f.name" class="rounded-full bg-[#FFE6D6] px-3 py-1">
@@ -305,6 +566,38 @@ async function submitCustom() {
         </div>
       </div>
     </section>
+     <Transition name="celebrate">
+    <div
+      v-if="showSuccess"
+      class="ap-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ap-success-title"
+      @click.self="closeSuccess"
+    >
+      <div class="ap-modal-card">
+        <span
+          class="pop mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[#FFC4A3] text-3xl"
+          ><i class="fa-solid fa-check"></i
+        ></span>
+        <h3 id="ap-success-title" class="font-display text-3xl md:text-4xl">Request received</h3>
+        <p class="mx-auto mt-3 max-w-sm text-[#5A413A]">
+          Thank you. Our team will review your design and measurements and contact you to confirm
+          feasibility, price and timing.
+        </p>
+        <p v-if="requestRef" class="mt-4 inline-block rounded-full bg-[#FFE6D6] px-4 py-1 text-sm">
+          Reference <strong>{{ requestRef }}</strong>
+        </p>
+        <div>
+          <button ref="closeBtn" class="btn-peach mt-7 justify-center px-10" @click="closeSuccess">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </Transition>
+
+  <canvas ref="confettiCanvas" class="ap-confetti" aria-hidden="true"></canvas>
   </div>
 </template>
 
@@ -467,5 +760,48 @@ async function submitCustom() {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+/* Success popup + confetti */
+.ap .ap-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2100; /* above Vuetify menus (2000) */
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(42, 27, 22, 0.45);
+  backdrop-filter: blur(3px);
+}
+.ap .ap-modal-card {
+  width: min(460px, 100%);
+  border-radius: 2rem;
+  background: #fff7f1;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 30px 80px -30px rgba(42, 27, 22, 0.5);
+}
+.ap .ap-confetti {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2200;
+}
+.celebrate-enter-active,
+.celebrate-leave-active {
+  transition: opacity 0.3s;
+}
+.celebrate-enter-active .ap-modal-card,
+.celebrate-leave-active .ap-modal-card {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.celebrate-enter-from,
+.celebrate-leave-to {
+  opacity: 0;
+}
+.celebrate-enter-from .ap-modal-card,
+.celebrate-leave-to .ap-modal-card {
+  transform: translateY(28px) scale(0.95);
 }
 </style>
