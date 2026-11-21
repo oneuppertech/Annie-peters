@@ -54,6 +54,14 @@ const router = createRouter({
     { path: '/privacy-policy', name: 'privacy-policy', component: PrivacyPolicy },
 { path: '/cookie-policy', name: 'cookie-policy', component: CookiePolicy },
 { path: '/terms', name: 'terms', component: Terms },
+{
+  path: '/track/:token',
+  name: 'track-order',
+  component: () => import('@/views/TrackOrder.vue'),
+  meta: {
+    title: 'Track Your Order | Annie Petars'
+  }
+}
    
   ],
   scrollBehavior(to, from, savedPosition) {

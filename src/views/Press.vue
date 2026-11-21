@@ -121,15 +121,43 @@ const collections = [
 const collectionHref = (c) => c.href || `${SHOP_URL}/collections/${c.slug}`
 
 /* ---------- NEW: press article thumbnail ---------- */
-const article = {
-  url: 'https://pmnewsnigeria.com/2024/02/22/african-fashion-finds-a-modern-voice-through-anniepetars-the-brand-founded-by-asana-peterson/',
-  // Better: download this image into /src/assets and import it instead of hotlinking
-  img: 'https://cdn.pmnewsnigeria.com/wp-content/uploads/2026/10/Annie-Peterson.jpg',
-  source: 'P.M. News',
-  title: 'African fashion finds a modern voice through AnniePetars, the brand founded by Asana Peterson',
-  author: 'Michael Adesina',
-  date: '22nd February, 2024'
-}
+const articles = ref([
+  {
+    id: 1,
+    url: 'https://pmnewsnigeria.com/2024/02/22/african-fashion-finds-a-modern-voice-through-anniepetars-the-brand-founded-by-asana-peterson/',
+    img: 'https://cdn.pmnewsnigeria.com/wp-content/uploads/2026/10/Annie-Peterson.jpg',
+    source: 'P.M. News',
+    title: 'African fashion finds a modern voice through AnniePetars, the brand founded by Asana Peterson',
+    author: 'Michael Adesina',
+    date: '22 February 2024',
+    category: 'Brand Feature',
+    excerpt: 'Discover how AnniePetars, founded by Asana Peterson, explores African fashion through contemporary design, distinctive prints and modern silhouettes.'
+  },
+
+  {
+  id: 2,
+  url: 'https://www.vanguardngr.com/2026/11/asana-kemuwa-expands-african-inspired-fashion-label-internationally/',
+  img: 'https://cdn.vanguardngr.com/wp-content/uploads/2026/11/Kumlii.png',
+  source: 'Vanguard News',
+  title: 'Asana Kemuwa expands African-inspired fashion label internationally',
+  author: 'Vanguard News',
+  date: '12 November 2026',
+  category: 'International Fashion',
+  excerpt: 'Vanguard features Asana Kemuwa and the growth of AnniePetars as an African-inspired fashion label expanding across Nigeria, Ghana, the United Kingdom and the United States.'
+},
+
+  {
+    id: 3,
+    url: '',
+    img: bridalImage,
+    source: 'Publication Name',
+    title: 'Another AnniePetars Fashion Story',
+    author: 'Author Name',
+    date: 'Publication Date',
+    category: 'Interview',
+    excerpt: 'A short description of this interview or publication feature goes here.'
+  }
+])
 
 /* ---------- NEW: full designer write-up ---------- */
 const designerParas = [
@@ -394,30 +422,64 @@ const joinNews = () => {
       </div>
 
       <!-- NEW: press article thumbnail -->
-      <a
-        :href="article.url"
-        target="_blank"
-        rel="noopener"
-        class="group mt-8 grid overflow-hidden rounded-3xl border border-[#2A1B16]/10 transition hover:bg-[#FFE6D6] md:grid-cols-[280px_1fr]"
-        data-aos="fade-up"
-      >
-        <div class="aspect-[4/3] overflow-hidden md:aspect-auto">
-          <img
-            :src="article.img"
-            alt="Asana Peterson, featured in P.M. News"
-            loading="lazy"
-            class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-          />
-        </div>
-        <div class="p-7">
-          <p class="text-sm text-[#C4623A]">{{ article.source }} · {{ article.date }}</p>
-          <h3 class="mt-2 font-display text-2xl leading-snug md:text-3xl">{{ article.title }}</h3>
-          <p class="mt-3 text-sm text-[#5A413A]">By {{ article.author }}</p>
-          <span class="mt-5 inline-flex items-center text-sm font-semibold">
-            Read the article <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-xs"></i>
-          </span>
-        </div>
-      </a>
+      <!-- Multiple press articles -->
+<div class="mt-8 grid gap-6 md:grid-cols-2">
+
+  <a
+    v-for="(item, i) in articles"
+    :key="item.id"
+    :href="item.url"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="group overflow-hidden rounded-3xl border border-[#2A1B16]/10 transition duration-500 hover:-translate-y-2 hover:bg-[#FFE6D6]"
+    data-aos="fade-up"
+    :data-aos-delay="i * 100"
+  >
+
+    <!-- Article Image -->
+    <div class="aspect-[16/10] overflow-hidden bg-[#FFE6D6]">
+      <img
+        :src="item.img"
+        :alt="item.title"
+        loading="lazy"
+        class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+      />
+    </div>
+
+    <!-- Article Details -->
+    <div class="p-7">
+
+      <div class="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#C4623A]">
+        <span>{{ item.source }}</span>
+        <span>·</span>
+        <span>{{ item.date }}</span>
+      </div>
+
+      <span class="mt-4 inline-block rounded-full bg-[#FFE6D6] px-3 py-1 text-xs font-semibold text-[#8B4930]">
+        {{ item.category }}
+      </span>
+
+      <h3 class="mt-4 font-display text-2xl leading-snug md:text-3xl">
+        {{ item.title }}
+      </h3>
+
+      <p class="mt-3 text-sm leading-7 text-[#5A413A]">
+        {{ item.excerpt }}
+      </p>
+
+      <p class="mt-4 text-xs text-[#8B7065]">
+        By {{ item.author }}
+      </p>
+
+      <span class="mt-6 inline-flex items-center text-sm font-semibold text-[#2A1B16]">
+        Read the full article
+        <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+      </span>
+
+    </div>
+  </a>
+
+</div>
 
       <p class="mt-8 max-w-2xl text-[#5A413A]" data-aos="fade-up">
         We welcome proposals from photographers, stylists, models, writers, retailers, event
