@@ -28,8 +28,6 @@ onMounted(() => {
 })
 onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
 
-
-
 /* ---------- Measurement form (stays on page) ---------- */
 const unit = ref('cm')
 const garment = ref('dress')
@@ -79,6 +77,8 @@ const MAX_MB = 8
 
 /* ---------- Contact / newsletter ---------- */
 /* ---------- Contact form ---------- */
+const conversationUrl = ref('')
+const copiedConversationLink = ref(false)
 
 const contact = reactive({
   name: '',
@@ -93,12 +93,10 @@ const contactError = ref('')
 
 async function sendContact() {
   contactError.value = ''
+  conversationUrl.value = ''
+  copiedConversationLink.value = false
 
-  if (
-    !contact.name.trim() ||
-    !contact.email.trim() ||
-    !contact.message.trim()
-  ) {
+  if (!contact.name.trim() || !contact.email.trim() || !contact.message.trim()) {
     contactError.value = 'Please complete all required fields.'
     return
   }
@@ -106,17 +104,14 @@ async function sendContact() {
   contactSending.value = true
 
   try {
-    const { data, error } = await supabase.functions.invoke(
-      'contact-messages',
-      {
-        body: {
-          name: contact.name.trim(),
-          email: contact.email.trim(),
-          enquiry_type: contact.type,
-          message: contact.message.trim()
-        }
+    const { data, error } = await supabase.functions.invoke('contact-messages', {
+      body: {
+        name: contact.name.trim(),
+        email: contact.email.trim(),
+        enquiry_type: contact.type,
+        message: contact.message.trim()
       }
-    )
+    })
 
     if (error) {
       throw new Error(error.message || 'Unable to submit your enquiry.')
@@ -126,6 +121,16 @@ async function sendContact() {
       throw new Error(data?.message || 'Unable to submit your enquiry.')
     }
 
+    const conversationPath = data?.data?.conversation?.path
+
+    if (!conversationPath) {
+      throw new Error(
+        'Your enquiry was received, but the conversation link could not be generated. Please contact us.'
+      )
+    }
+
+    conversationUrl.value = new URL(conversationPath, window.location.origin).toString()
+
     contactSent.value = true
 
     Object.assign(contact, {
@@ -134,172 +139,202 @@ async function sendContact() {
       type: 'General enquiry',
       message: ''
     })
-
   } catch (error) {
-    console.error('Contact submission error:', error)
+    console.log('Contact submission error:', error)
 
-    contactError.value =
-      error.message || 'Something went wrong. Please try again.'
+    contactError.value = error.message || 'Something went wrong. Please try again.'
   } finally {
     contactSending.value = false
   }
 }
+
+async function copyConversationLink() {
+  if (!conversationUrl.value) return
+
+  try {
+    await navigator.clipboard.writeText(conversationUrl.value)
+    copiedConversationLink.value = true
+  } catch {
+    contactError.value = 'Unable to copy the link. Please copy it manually.'
+  }
+}
+
 const news = reactive({ email: '', done: false })
 const joinNews = () => {
   if (!news.email) return
   // TODO: wire to mailing list
   news.done = true
 }
+function resetContactForm() {
+  contactSent.value = false
+  contactError.value = ''
+  conversationUrl.value = ''
+  copiedConversationLink.value = false
+}
 </script>
 
 <template>
-   
-<!-- CONTACT -->
-    <section id="contact" class="bg-[#2A1B16] py-28 text-[#FFF7F1]">
-      <div class="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2">
-        <div data-aos="fade-right">
-          <h2 class="font-display text-5xl leading-tight md:text-6xl">
-            We would like to hear from you
-          </h2>
-          <p class="mt-5 max-w-md text-[#FFD9C2]">
-            Collections, custom outfits, collaborations or press: tell us what you need and we will
-            route it to the right person.
-          </p>
-          <ul class="mt-10 space-y-5">
-            <li>
-              <a :href="`mailto:${EMAIL}`" class="flex items-center gap-4 hover:text-[#FFC4A3]"
-                ><i class="fa-regular fa-envelope w-6 text-xl"></i>{{ EMAIL }}</a
-              >
-            </li>
-            <li>
-              <a
-                :href="`tel:${PHONE.replace(/\s/g, '')}`"
-                class="flex items-center gap-4 hover:text-[#FFC4A3]"
-                ><i class="fa-solid fa-phone w-6 text-xl"></i>{{ PHONE }}</a
-              >
-            </li>
-            <li>
-              <a
-                :href="WHATSAPP"
-                target="_blank"
-                rel="noopener"
-                class="flex items-center gap-4 hover:text-[#FFC4A3]"
-                ><i class="fa-brands fa-whatsapp w-6 text-xl"></i>Chat on WhatsApp</a
-              >
-            </li>
-          </ul>
-        </div>
-       
-<form
-  class="space-y-4 rounded-[2rem] bg-[#3A251E] p-8"
-  data-aos="fade-left"
-  @submit.prevent="sendContact"
->
-  <template v-if="!contactSent">
-
-    <input
-      v-model="contact.name"
-      type="text"
-      class="field-dark"
-      placeholder="Full name"
-      autocomplete="name"
-      maxlength="120"
-      required
-    />
-
-    <input
-      v-model="contact.email"
-      type="email"
-      class="field-dark"
-      placeholder="Email address"
-      autocomplete="email"
-      maxlength="254"
-      required
-    />
-
-   <el-select
-  v-model="contact.type"
-  placeholder="Select enquiry type"
-  class="contact-select w-full"
-  size="large"
-  popper-class="contact-select-dropdown"
->
-  <el-option
-    v-for="type in [
-      'General enquiry',
-      'Customer service',
-      'Custom outfit',
-      'Press / media',
-      'Sponsorship',
-      'Partnership',
-      'Retail',
-      'Event / exhibition'
-    ]"
-    :key="type"
-    :label="type"
-    :value="type"
-  />
-</el-select>
-
-    <textarea
-      v-model="contact.message"
-      rows="5"
-      class="field-dark"
-      placeholder="Your message and any relevant dates"
-      maxlength="5000"
-      required
-    ></textarea>
-
-    <p
-      v-if="contactError"
-      class="rounded-xl border border-red-400/30 bg-red-400/10 p-3 text-sm text-red-200"
-      role="alert"
-    >
-      {{ contactError }}
-    </p>
-
-    <button
-      type="submit"
-      class="btn-peach w-full justify-center"
-      :disabled="contactSending"
-    >
-      <i
-        v-if="contactSending"
-        class="fa-solid fa-spinner fa-spin mr-2"
-      ></i>
-
-      {{ contactSending ? 'Sending enquiry...' : 'Send your enquiry' }}
-    </button>
-
-  </template>
-
-  <div
-    v-else
-    class="py-10 text-center"
-    role="status"
-  >
-    <i class="fa-solid fa-circle-check mb-4 text-4xl text-[#FFC4A3]"></i>
-
-    <h3 class="font-display text-3xl">
-      Thank you!
-    </h3>
-
-    <p class="mt-3 text-[#FFD9C2]">
-      Your enquiry has been received. Our team will be in touch.
-    </p>
-
-    <button
-      type="button"
-      class="btn-peach mt-6"
-      @click="contactSent = false; contactError = ''"
-    >
-      Send another message
-    </button>
-  </div>
-</form>
-
+  <!-- CONTACT -->
+  <section id="contact" class="bg-[#2A1B16] py-28 text-[#FFF7F1]">
+    <div class="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2">
+      <div data-aos="fade-right">
+        <h2 class="font-display text-5xl leading-tight md:text-6xl">
+          We would like to hear from you
+        </h2>
+        <p class="mt-5 max-w-md text-[#FFD9C2]">
+          Collections, custom outfits, collaborations or press: tell us what you need and we will
+          route it to the right person.
+        </p>
+        <ul class="mt-10 space-y-5">
+          <li>
+            <a :href="`mailto:${EMAIL}`" class="flex items-center gap-4 hover:text-[#FFC4A3]"
+              ><i class="fa-regular fa-envelope w-6 text-xl"></i>{{ EMAIL }}</a
+            >
+          </li>
+          <li>
+            <a
+              :href="`tel:${PHONE.replace(/\s/g, '')}`"
+              class="flex items-center gap-4 hover:text-[#FFC4A3]"
+              ><i class="fa-solid fa-phone w-6 text-xl"></i>{{ PHONE }}</a
+            >
+          </li>
+          <li>
+            <a
+              :href="WHATSAPP"
+              target="_blank"
+              rel="noopener"
+              class="flex items-center gap-4 hover:text-[#FFC4A3]"
+              ><i class="fa-brands fa-whatsapp w-6 text-xl"></i>Chat on WhatsApp</a
+            >
+          </li>
+        </ul>
       </div>
-    </section>
+
+      <form
+        class="space-y-4 rounded-[2rem] bg-[#3A251E] p-8"
+        data-aos="fade-left"
+        @submit.prevent="sendContact"
+      >
+        <template v-if="!contactSent">
+          <input
+            v-model="contact.name"
+            type="text"
+            class="field-dark"
+            placeholder="Full name"
+            autocomplete="name"
+            maxlength="120"
+            required
+          />
+
+          <input
+            v-model="contact.email"
+            type="email"
+            class="field-dark"
+            placeholder="Email address"
+            autocomplete="email"
+            maxlength="254"
+            required
+          />
+
+          <el-select
+            v-model="contact.type"
+            placeholder="Select enquiry type"
+            class="contact-select w-full"
+            size="large"
+            popper-class="contact-select-dropdown"
+          >
+            <el-option
+              v-for="type in [
+                'General enquiry',
+                'Customer service',
+                'Custom outfit',
+                'Press / media',
+                'Sponsorship',
+                'Partnership',
+                'Retail',
+                'Event / exhibition'
+              ]"
+              :key="type"
+              :label="type"
+              :value="type"
+            />
+          </el-select>
+
+          <textarea
+            v-model="contact.message"
+            rows="5"
+            class="field-dark"
+            placeholder="Your message and any relevant dates"
+            maxlength="5000"
+            required
+          ></textarea>
+
+          <p
+            v-if="contactError"
+            class="rounded-xl border border-red-400/30 bg-red-400/10 p-3 text-sm text-red-200"
+            role="alert"
+          >
+            {{ contactError }}
+          </p>
+
+          <button type="submit" class="btn-peach w-full justify-center" :disabled="contactSending">
+            <i v-if="contactSending" class="fa-solid fa-spinner fa-spin mr-2"></i>
+
+            {{ contactSending ? 'Sending enquiry...' : 'Send your enquiry' }}
+          </button>
+        </template>
+
+        <div v-else class="py-8 text-center" role="status">
+          <i class="fa-solid fa-circle-check mb-4 text-4xl text-[#FFC4A3]"></i>
+
+          <h3 class="font-display text-3xl">Thank you!</h3>
+
+          <p class="mt-3 text-[#FFD9C2]">
+            Your enquiry has been received successfully. You can continue the conversation with our
+            team using your private link.
+          </p>
+
+          <div class="mt-7 rounded-2xl border border-[#FFC4A3]/20 bg-[#2A1B16] p-5 text-left">
+            <div class="flex items-center gap-2 text-[#FFC4A3]">
+              <i class="fa-solid fa-lock"></i>
+              <span class="text-sm font-semibold">Your private conversation link</span>
+            </div>
+
+            <p class="mt-3 break-all text-sm text-[#FFF7F1]">
+              {{ conversationUrl }}
+            </p>
+
+            <button
+              type="button"
+              class="btn-peach mt-5 w-full justify-center"
+              @click="copyConversationLink"
+            >
+              <i
+                :class="
+                  copiedConversationLink ? 'fa-solid fa-check mr-2' : 'fa-regular fa-copy mr-2'
+                "
+              ></i>
+
+              {{ copiedConversationLink ? 'Link copied!' : 'Copy conversation link' }}
+            </button>
+          </div>
+
+          <p class="mt-4 text-xs leading-6 text-[#FFD9C2]/70">
+            Please save this link somewhere safe. Anyone with the link may be able to access this
+            conversation. It expires after 180 days.
+          </p>
+
+          <button
+            type="button"
+            class="btn-ghost mt-6 w-full justify-center border-[#FFC4A3] text-[#FFF7F1]"
+            @click="resetContactForm"
+          >
+            Send another message
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
 </template>
 
 <style>
