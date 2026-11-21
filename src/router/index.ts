@@ -62,7 +62,7 @@ const router = createRouter({
     requiresAuth: false,
     public: true
   }
-}
+},
 { path: '/cookie-policy', name: 'cookie-policy', component: CookiePolicy },
 { path: '/terms', name: 'terms', component: Terms },
 {
